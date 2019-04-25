@@ -56,13 +56,13 @@ public class Lobby extends Game
 	    Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
 	}
 	
-	server.addListener(new ThreadedListener(new Listener() 
+	server.addListener(new Listener() 
 	{
             @Override
             public void connected (Connection connection) 
             {
-                connections.add(connection);
-		comms.numPlayers = connections.size();
+                //connections.add(connection);
+		comms.numPlayers = server.getConnections().length;//connections.size();
 		PushComms();
             }
 	    @Override
@@ -97,7 +97,7 @@ public class Lobby extends Game
 		PushComms();
 	      }
 	    }
-	}));
+	});
     }
 
     public void Challenged()
@@ -157,10 +157,11 @@ public class Lobby extends Game
     
     public void PushComms()
     {
-	Iterator clients = connections.iterator();
+        server.sendToAllTCP(comms);
+	/*Iterator clients = connections.iterator();
         while(clients.hasNext())
         {
             ((Connection)clients.next()).sendTCP(comms);
-        }
+        }*/
     }
 }

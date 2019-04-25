@@ -20,7 +20,7 @@ public class Game
         new Thread(server).start();
         server.bind(54777, 54777); //54500-54599 are reserved for lobbies
         
-        server.addListener(new ThreadedListener(new Listener() {
+        server.addListener(new Listener() {
 	    @Override
             public void connected (Connection connection) 
             {
@@ -40,6 +40,6 @@ public class Game
                  connection.sendTCP(request);
               }
 	    }
-        }));
+        });
     }
 }

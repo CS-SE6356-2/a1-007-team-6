@@ -21,6 +21,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
     final String SERVER_IP = "127.0.0.1";
     Client client;
     int port;
+    int numplayers = 0;
     public ClientLobbyGUI(String gameCode) 
     {
         this.gameCode = gameCode;
@@ -39,17 +40,18 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
         initializeCommClient();
         try
         {
-	    System.out.println(port);
+	    //System.out.println(port);
             client.connect(5000, SERVER_IP, port, port);
             client.addListener(new Listener() 
             {
-
+                @Override
                 public void received (Connection connection, Object object) 
                 {
                    if (object instanceof BSServerCommunication) 
                    {
                       BSServerCommunication response = (BSServerCommunication)object;
                       System.out.println("Player has connected to: " + response.lobby);
+                      System.out.println(response.numPlayers);
                    }
                 }
             });
@@ -69,7 +71,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
             Kryo kryo = client.getKryo();
             kryo.register(BSServerCommunication.class);
             kryo.register(java.util.ArrayList.class);
-            new Thread(client).start();
+            client.start();
         }
         catch(Exception e)
         {
@@ -154,7 +156,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         ClientInGameGUI inGame = new ClientInGameGUI(this, true);
         inGame.setGameCode(gameCode);
-        inGame.setLobbyPort(54501);
+        inGame.setLobbyPort(port);
         this.setVisible(false);
         inGame.setVisible(true);
         inGame.toFront();
