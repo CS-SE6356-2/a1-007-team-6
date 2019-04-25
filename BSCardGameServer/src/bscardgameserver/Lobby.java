@@ -29,6 +29,7 @@ public class Lobby extends Game
     int winners;
     int port;
     boolean startcheck;
+    boolean testconnection;
     
     BSServerCommunication comms;
     Server server = new Server();
@@ -42,6 +43,7 @@ public class Lobby extends Game
 	pile = new DiscardPile();
 	comms.emptyPile = true;
 	startcheck = false;
+	testconnection = false;
 	winners =0;
         connections = new ArrayList<>();
         port = 54000 + Lobby;
@@ -61,8 +63,26 @@ public class Lobby extends Game
             @Override
             public void connected (Connection connection) 
             {
-                //connections.add(connection);
-		comms.numPlayers = server.getConnections().length;//connections.size();
+                if (!connections.contains(connection))
+		{
+		    if (connections.isEmpty())
+		    {
+			connections.add(connection);
+			testconnection = true;
+		    }
+		    else if (testconnection)
+		    {
+			connections.add(connection);
+			testconnection = false;
+		    }
+		    else
+		    {
+			connections.remove(connections.size() - 1);
+			connections.add(connection);
+			testconnection = true;
+		    }
+		    comms.numPlayers = connections.size();//server.getConnections().length;
+		}
 		PushComms();
             }
 	    @Override
@@ -157,7 +177,7 @@ public class Lobby extends Game
     
     public void PushComms()
     {
-        server.sendToAllTCP(comms);
+	//server.sendToAllTCP(comms);
 	/*Iterator clients = connections.iterator();
         while(clients.hasNext())
         {
