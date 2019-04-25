@@ -30,7 +30,6 @@ public class Lobby extends Game
     int port;
     boolean startcheck;
     boolean testconnection;
-    
     BSServerCommunication comms;
     Server server = new Server();
     Kryo kryo = server.getKryo(); 
@@ -43,7 +42,6 @@ public class Lobby extends Game
 	pile = new DiscardPile();
 	comms.emptyPile = true;
 	startcheck = false;
-	testconnection = false;
 	winners =0;
         connections = new ArrayList<>();
         port = 54000 + Lobby;
@@ -63,7 +61,7 @@ public class Lobby extends Game
             @Override
             public void connected (Connection connection) 
             {
-                if (!connections.contains(connection))
+		if (!connections.contains(connection))
 		{
 		    if (connections.isEmpty())
 		    {
@@ -177,11 +175,11 @@ public class Lobby extends Game
     
     public void PushComms()
     {
-	//server.sendToAllTCP(comms);
-	/*Iterator clients = connections.iterator();
+        //server.sendToAllTCP(comms);
+		Iterator clients = connections.iterator();
         while(clients.hasNext())
         {
             ((Connection)clients.next()).sendTCP(comms);
-        }*/
+        }
     }
 }
