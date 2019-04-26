@@ -37,7 +37,6 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setResizable(false);
-        this.client = client;
         setupCards();
     }
     
