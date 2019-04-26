@@ -2,7 +2,6 @@ package bscardgameserver;
 
 import com.esotericsoftware.kryo.*;
 import com.esotericsoftware.kryonet.*;
-import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 import java.io.*;
 import java.util.*;
 
@@ -17,7 +16,7 @@ public class Game
         Kryo kryo = server.getKryo(); 
 	kryo.register(BSServerCommunication.class);
         kryo.register(java.util.ArrayList.class);
-        new Thread(server).start();
+        server.start();
         server.bind(54777, 54777); //54500-54599 are reserved for lobbies
         
         server.addListener(new Listener() {

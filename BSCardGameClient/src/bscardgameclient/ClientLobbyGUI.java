@@ -7,6 +7,9 @@ package bscardgameclient;
 
 import com.esotericsoftware.kryonet.*;
 import com.esotericsoftware.kryo.*;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,7 +24,8 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
     final String SERVER_IP = "127.0.0.1";
     Client client;
     int port;
-    int numplayers = 0;
+    public static volatile BSServerCommunication comms;
+    
     public ClientLobbyGUI(String gameCode) 
     {
         this.gameCode = gameCode;
@@ -47,16 +51,26 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
                 @Override
                 public void received (Connection connection, Object object) 
                 {
-                   if (object instanceof BSServerCommunication) 
-                   {
-                      BSServerCommunication response = (BSServerCommunication)object;
-                      System.out.println("Player has connected to: " + response.lobby);
-                      System.out.println(response.numPlayers);
-                   }
+		    synchronized(client)    
+		    { 
+		    if (object instanceof BSServerCommunication) 
+		    {
+			comms = (BSServerCommunication)object;
+			System.out.println("Player has connected to: " + comms.lobby);
+			if(comms.started)
+			{			    
+			    client.notify();
+			    System.out.println("launch request recieved");
+			    launchGameGUI();
+			}
+		    }
+		    }
                 }
             });
             
-        }
+        } /*catch (IOException ex) {
+	    Logger.getLogger(ClientLobbyGUI.class.getName()).log(Level.SEVERE, null, ex);
+	}*/
         catch(Exception e)
         {
             System.out.println("Exception in connectToServer(): " + e);
@@ -153,17 +167,32 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void startGameNowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startGameNowButtonActionPerformed
-        // TODO add your handling code here:
-        ClientInGameGUI inGame = new ClientInGameGUI(this, true);
+	synchronized(client)
+	{
+	    comms.started = true;
+	    client.sendTCP(comms);
+	    /*try {
+		System.out.println("waiting");
+		client.wait();
+		System.out.println("notified");
+		//client.close();
+	    } catch (InterruptedException ex) {
+		Logger.getLogger(ClientLobbyGUI.class.getName()).log(Level.SEVERE, null, ex);
+	    }*/
+	}
+    }//GEN-LAST:event_startGameNowButtonActionPerformed
+    public void launchGameGUI()
+    {
+	System.out.println("We're in the inGame now");
+	ClientInGameGUI inGame = new ClientInGameGUI(this, true);
         inGame.setGameCode(gameCode);
         inGame.setLobbyPort(port);
+	inGame.setNet(client, comms);
         this.setVisible(false);
         inGame.setVisible(true);
         inGame.toFront();
         inGame.repaint();
-        
-    }//GEN-LAST:event_startGameNowButtonActionPerformed
-
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel gameCodeLabel;

@@ -31,6 +31,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     String gameCode = "";
     int lobbyPort;
     Client client;
+    BSServerCommunication comms;
     ArrayList<JToggleButton> buttons = new ArrayList<>();
     public ClientInGameGUI(java.awt.Frame parent, boolean modal) 
     {
@@ -39,7 +40,11 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         setResizable(false);
         setupCards();
     }
-    
+    public void setNet(Client client, BSServerCommunication comms)
+    {
+	this.client = client;
+	this.comms = comms;
+    }
     public void initializeCommClient()
     {
         try

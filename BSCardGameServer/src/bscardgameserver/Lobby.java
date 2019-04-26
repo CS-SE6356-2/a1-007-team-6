@@ -3,10 +3,10 @@ package bscardgameserver;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 import com.esotericsoftware.kryonet.Server;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -30,26 +30,27 @@ public class Lobby extends Game
     int port;
     boolean startcheck;
     boolean testconnection;
-    BSServerCommunication comms;
+    public static volatile BSServerCommunication comms;
     Server server = new Server();
     Kryo kryo = server.getKryo(); 
 
     public Lobby(BSServerCommunication lobbyCreated) 
     {
+	synchronized(server) {
 	comms = lobbyCreated;
 	Lobby = comms.lobby;
 	Players = new LinkedList<>();
 	pile = new DiscardPile();
 	comms.emptyPile = true;
 	startcheck = false;
-	winners =0;
+	winners = 0;
         connections = new ArrayList<>();
         port = 54000 + Lobby;
 	
 	kryo.register(BSServerCommunication.class);
         kryo.register(java.util.ArrayList.class);
 	//comms = new BSServerCommunication(Lobby);
-	new Thread(server).start();
+	server.start();
 	try {
 	    server.bind(port, port);
 	} catch (IOException ex) {
@@ -61,6 +62,7 @@ public class Lobby extends Game
             @Override
             public void connected (Connection connection) 
             {
+		synchronized(server) {
 		if (!connections.contains(connection))
 		{
 		    if (connections.isEmpty())
@@ -82,14 +84,16 @@ public class Lobby extends Game
 		    comms.numPlayers = connections.size();//server.getConnections().length;
 		}
 		PushComms();
+		}
             }
 	    @Override
 	    public void received (Connection connection, Object object) 
 	    {
+		synchronized(server) {
 		if (object instanceof BSServerCommunication) 
 		{
-		BSServerCommunication request = (BSServerCommunication)object;
-		System.out.println(request.confirmR);
+		setcomm((BSServerCommunication)object);
+		    //BSServerCommunication comms = (BSServerCommunication)object;
 		if (!startcheck && comms.started)
 		{
 		    startcheck = true;
@@ -100,6 +104,8 @@ public class Lobby extends Game
 		    //switch cases for playing a card, challenging, and winning
 		    case 0: //card(s) played
 			pile.addCards(comms.cardsPlayed);
+			comms.emptyPile = false;
+			NextPlayer();
 			break;
 		    case 1: //challenged
 			Challenged();
@@ -115,21 +121,26 @@ public class Lobby extends Game
 		PushComms();
 	      }
 	    }
+	    }
 	});
+	}
     }
 
     public void Challenged()
     {
+	synchronized(server) {
 	ArrayList challengeDeck = (ArrayList)pile.empty();
 	if (pile.topCard == lastCard) //challenger wrong if condition is met
 	    comms.PlayerHands.get(comms.actor).addAll(challengeDeck);
 	else
 	    comms.PlayerHands.get(comms.actor).addAll(challengeDeck);
 	comms.emptyPile = true;
+	}
     }
 
     public void StartGame()
     {
+	synchronized(server) {
 	numPlayers = comms.numPlayers;
 	for(int count = 1; count <= numPlayers; count++)
 	{
@@ -137,15 +148,20 @@ public class Lobby extends Game
 	}
 	comms.currentTurn = 1;
 	CurrentCard = 0;
-	Winners = new Integer[numPlayers - 2];
+	if(numPlayers > 2)
+	    Winners = new Integer[numPlayers - 2];
+	comms.PlayerHands = new ArrayList<>();
 	distributeCards();
 	//NextPlayer();
-	PushComms();
+	//PushComms();
+    }
     }
     
     public void distributeCards()
     {
-	ArrayList<Integer> deck = new ArrayList<>();
+	synchronized(server) {
+	ArrayList<Integer> deck = new ArrayList<>(Arrays.asList(0, 0));
+	deck.clear();
 	for(int counter = 0; counter < 52; counter++)
 	{
 	    deck.add(counter);
@@ -153,33 +169,48 @@ public class Lobby extends Game
 	Collections.shuffle(deck);
 	
 	//split the cards evenly between the players
-	int each = 52 - (52 % numPlayers);
+	int each = (52 - (52 % numPlayers))/numPlayers;
 	for(int i = 0; i < numPlayers; i++)
 	{
+	    comms.PlayerHands.add(new ArrayList<Integer>(Arrays.asList(0, 0)));
+	    
 	    for(int j = 0; j < each; j++)
 	    {
-		comms.PlayerHands.get(comms.actor).add(deck.remove(0));
+		comms.PlayerHands.get(i).add(deck.remove(0));
 	    }
 	}
 	//the remaining cards seed the discard pile
 	pile.addCards(deck);
+	}
     }
 
     public void NextPlayer()
     {
+	synchronized(server) {
 	LastTurn = comms.currentTurn;
 	comms.currentTurn = Players.poll();
 	Players.add(Turn);
         PushComms();
+	}
     }
     
     public void PushComms()
     {
+	synchronized(server) {
         //server.sendToAllTCP(comms);
-		Iterator clients = connections.iterator();
+	Iterator clients = connections.iterator();
         while(clients.hasNext())
         {
             ((Connection)clients.next()).sendTCP(comms);
         }
+	}
+    }
+    public void setcomm(BSServerCommunication com)
+    {
+	comms = com;
+    }
+    public void getcomm(BSServerCommunication com)
+    {
+	com = comms;
     }
 }

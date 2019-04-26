@@ -21,7 +21,7 @@ public class BSServerCommunication {
     
     BSServerCommunication()
     {
-	PlayerHands = new ArrayList<ArrayList<Integer>>(6);
+	//PlayerHands = new ArrayList<ArrayList<Integer>>(6);
 	cardsPlayed = new ArrayList<>();
 	started = false;
     }

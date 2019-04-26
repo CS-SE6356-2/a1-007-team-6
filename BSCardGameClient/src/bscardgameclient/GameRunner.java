@@ -26,7 +26,7 @@ public class GameRunner
     boolean isLobbyCreator = false;
     Client client;
     int lobbyPort;
-    public static volatile BSServerCommunication comm;
+    public static volatile BSServerCommunication comms;
     
     public static void main(String args[]) throws IOException 
     {
@@ -69,13 +69,12 @@ public class GameRunner
     
     public GameRunner(String gameCode, boolean isLobbyCreator)
     {
-	comm = new BSServerCommunication();
+	comms = new BSServerCommunication();
         this.isLobbyCreator = isLobbyCreator;
 	initializeCommClient();
 	if(isLobbyCreator)
         {
 	    registerLobby();
-	    //this.gameCode= comm.lobby.toString();
         }
 	else
 	{
@@ -83,7 +82,6 @@ public class GameRunner
 	    lobbyPort = BASE_PORT + Integer.parseInt(gameCode);
 	    registerLobby(gameCode);
 	}
-        //System.out.println(lobbyPort);
         launchLobbyGUI();
     }    
     public void launchLobbyGUI()
@@ -91,19 +89,14 @@ public class GameRunner
         ClientLobbyGUI lobby = new ClientLobbyGUI(gameCode);
 	lobby.setLobbyPort(lobbyPort);
         if(isLobbyCreator)
-        {
             lobby.enableLobbyCreatorInterface();
-            //registerLobby(gameCode);
-            //System.out.println("Lobby Port: " + lobbyPort);
-        }
         lobby.connectToServer();
         startupGUI.setVisible(false);
         lobby.setVisible(true);
         lobby.toFront();
         lobby.repaint();
-        client.stop();
+        //client.stop();
     }
-   
     public void initializeCommClient()
     {
         try
@@ -116,7 +109,7 @@ public class GameRunner
         }
         catch(Exception e)
         {
-            System.out.println("Unable to initialize communication client");
+            System.out.println("Unable to initialize commsunication client");
         }
     }
     
@@ -127,10 +120,6 @@ public class GameRunner
         {
             // Connect to game server lobby with the provided game code
             client.connect(5000, SERVER_IP, lobbyPort, lobbyPort);
-
-            //BSServerCommunication comm = new BSServerCommunication();
-            
-            //client.sendTCP(gameCode);
 	    Listener tempListener;
             client.addListener(tempListener = new Listener() 
             {
@@ -140,16 +129,15 @@ public class GameRunner
                 synchronized(client) {
 		if (object instanceof BSServerCommunication) 
 		{
-		    comm = (BSServerCommunication)object;
-		    if(comm.started)
+		    comms = (BSServerCommunication)object;
+		    if(comms.started)
 		     {
 			 System.out.println("This game lobby has already started");
                          JOptionPane.showMessageDialog(null, "This game lobby has already started, please try another code or create a new lobby", "Unable to join lobby", JOptionPane.ERROR_MESSAGE);
 		     }
 		     else
 		     {
-		       System.out.println("Connecting to lobby: " + comm.lobby);
-		       //lobbyPort = comm.lobby;
+		       System.out.println("Connecting to lobby: " + comms.lobby);
 		     }
                     client.notify();
                     connection.close();
@@ -181,10 +169,6 @@ public class GameRunner
         {
             // Connect to game server and register a new lobby
             client.connect(5000, SERVER_IP, 54777, 54777);
-
-            //BSServerCommunication comm = new BSServerCommunication();
-            
-            //client.sendTCP(gameCode);
 	    Listener tempListener;
             client.addListener(tempListener = new Listener() 
             {
@@ -194,8 +178,8 @@ public class GameRunner
                     synchronized(client) {
 		    if (object instanceof BSServerCommunication) 
 		    {
-			comm = (BSServerCommunication)object;
-			gameCode = comm.lobby.toString();
+			comms = (BSServerCommunication)object;
+			gameCode = comms.lobby.toString();
 			lobbyPort = BASE_PORT + Integer.parseInt(gameCode);
 			System.out.println("Connecting to lobby: " + gameCode);
 		    }
