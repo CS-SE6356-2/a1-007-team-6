@@ -5,8 +5,8 @@
  */
 package bscardgameclient;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.*;
+import com.esotericsoftware.kryo.*;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,14 +37,20 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setResizable(false);
+        this.client = client;
         setupCards();
+    }
+    
+    public void setCommClient(Client client)
+    {
+        this.client = client;
     }
     
     public void initializeCommClient()
     {
         try
         {
-            client = new Client();
+            //client = new Client();
             Kryo kryo = client.getKryo();
             kryo.register(BSServerCommunication.class);
             kryo.register(java.util.ArrayList.class);
