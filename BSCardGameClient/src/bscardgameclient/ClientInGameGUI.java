@@ -45,11 +45,17 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 	this.client = client;
 	this.comms = comms;
     }
+    
+    public void setCommClient(Client client)
+    {
+        this.client = client;
+    }
+    
     public void initializeCommClient()
     {
         try
         {
-            client = new Client();
+            //client = new Client();
             Kryo kryo = client.getKryo();
             kryo.register(BSServerCommunication.class);
             kryo.register(java.util.ArrayList.class);

@@ -188,6 +188,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
         inGame.setGameCode(gameCode);
         inGame.setLobbyPort(port);
 	inGame.setNet(client, comms);
+        inGame.setCommClient(client);
         this.setVisible(false);
         inGame.setVisible(true);
         inGame.toFront();
