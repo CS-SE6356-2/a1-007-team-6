@@ -294,7 +294,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         // TODO add your handling code here:
-        setCardIcons((ArrayList)currentHand.subList(pageNumber * 8, 7));
+        setCardIcons((ArrayList)(currentHand.subList(pageNumber * 8, (pageNumber+1)*8-1 > currentHand.size() ? currentHand.size() : (pageNumber+1)*8-1)));
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed

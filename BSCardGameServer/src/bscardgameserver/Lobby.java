@@ -104,6 +104,7 @@ public class Lobby extends Game
 		    //switch cases for playing a card, challenging, and winning
 		    case 0: //card(s) played
 			pile.addCards(comms.cardsPlayed);   //empty cardsplayed before updating the clients
+			comms.cardsPlayed.clear();
 			comms.emptyPile = false;
 			NextPlayer();
 			break;
@@ -187,15 +188,17 @@ public class Lobby extends Game
     public void NextPlayer()
     {
 	synchronized(server) {
-	LastTurn = comms.currentTurn;
-	comms.currentTurn = Players.poll();
-	Players.add(Turn);
-	if(CurrentCard == 12)
-	    CurrentCard = 0;
-	else
-	    CurrentCard++;
-	comms.CurrentCard = CurrentCard;
-        PushComms();
+	    LastTurn = comms.currentTurn;
+	    comms.previousTurn = LastTurn;
+	    Turn = Players.poll();
+	    comms.currentTurn = Turn;
+	    Players.add(Turn);
+	    if(CurrentCard == 12)
+		CurrentCard = 0;
+	    else
+		CurrentCard++;
+	    comms.CurrentCard = CurrentCard;
+	    PushComms();
 	}
     }
     
