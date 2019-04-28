@@ -33,6 +33,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     Client client;
     BSServerCommunication comms;
     ArrayList<JToggleButton> buttons = new ArrayList<>();
+    ArrayList<ArrayList<Integer>> hands = new ArrayList<>();
     public ClientInGameGUI(java.awt.Frame parent, boolean modal) 
     {
         super(parent, modal);
@@ -45,12 +46,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 	this.client = client;
 	this.comms = comms;
     }
-    
-    public void setCommClient(Client client)
-    {
-        this.client = client;
-    }
-    
+        
     public void initializeCommClient()
     {
         try
@@ -74,7 +70,14 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         
     public void setupCards()
     {
-        
+        hands = comms.PlayerHands;
+        for(ArrayList<Integer> card : hands)
+        {
+            for(Integer i : card)
+            {
+                System.out.println("Card number: " + i);
+            }
+        }
         int x = 0;
         buttons.add(card1Button);
         buttons.add(card2Button);
