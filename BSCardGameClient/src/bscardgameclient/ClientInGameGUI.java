@@ -39,12 +39,13 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setResizable(false);
-        setupCards();
     }
-    public void setNet(Client client, BSServerCommunication comms)
+    public void setNet(Client client, BSServerCommunication comm)
     {
 	this.client = client;
-	this.comms = comms;
+	this.comms = comm;
+	System.out.println(comms.lobby);
+	setupCards();
     }
         
     public void initializeCommClient()
