@@ -3,7 +3,7 @@ package bscardgameclient;
 import java.util.ArrayList;
 
 public class BSServerCommunication {
-    Integer lobby;
+    public Integer lobby;
     int numPlayers;
     int numWinners;
     boolean started;
@@ -21,7 +21,7 @@ public class BSServerCommunication {
     
     
     
-    BSServerCommunication()
+    public BSServerCommunication()
     {
 	CurrentCard = 0;    //ranges form 0-12 to represent ace-king
 	cardsPlayed = new ArrayList<>();

@@ -5,6 +5,8 @@
  */
 package BSCardGameServer;
 
+import bscardgameserver.BSServerCommunication;
+import bscardgameserver.Lobby;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -18,28 +20,17 @@ import static org.junit.Assert.*;
  */
 public class LobbyTest {
     
-    public LobbyTest() {
-    }
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
+    BSServerCommunication x = new BSServerCommunication();
+    //Lobby l = new Lobby(x);
+    //x.lobby;
     
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+     @Test
+	public void lobbyCreated()
+	{
+            //assertEquals(0, l.winners);
+            //assertEquals(0, l.connections.size());
+            //assertEquals(0, l.Players.size());
+            //assertEquals(0, l.pile.size());     
+        }
 }

@@ -16,9 +16,9 @@ import java.util.logging.Logger;
 
 public class Lobby extends Game
 {
-    ArrayList<Connection> connections;
-    Queue<Integer> Players;
-    DiscardPile pile;
+    public ArrayList<Connection> connections;
+    public Queue<Integer> Players;
+    public DiscardPile pile;
     int Turn;
     int LastTurn;
     int CurrentCard;
