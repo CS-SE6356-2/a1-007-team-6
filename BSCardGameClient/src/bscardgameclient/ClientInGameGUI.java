@@ -31,6 +31,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     String gameCode = "";
     int lobbyPort;
     int playerNum;
+    int pageNumber = 0;
     Client client;
     BSServerCommunication comms;
     int index = 0;
@@ -47,7 +48,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     {
 	this.client = client;
 	this.comms = comm;
-	this.playerNum = playerNum - 1;
+	this.playerNum = playerNum;
 	System.out.println(comms.lobby);
 	setupCards();
     }
@@ -77,7 +78,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     {
         
         hands = comms.PlayerHands;
-        currentHand = hands.get(playerNum);
+        currentHand = hands.get(playerNum - 1);
         
         connectionLabel.setText("Connected as: Player " + playerNum);
         cardToPlayLabel.setText("Card to play is: ");
@@ -94,13 +95,47 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         buttons.add(card6Button);
         buttons.add(card7Button);
         buttons.add(card8Button);
-        
+        setCardIcons((ArrayList)currentHand.subList(0, 7));
+        /*
         try 
         {
             
+            
             for(JToggleButton button : buttons)
             {
+                
                 int cardNum = currentHand.get(index);
+                String fileName = "Resources/" + cardNum + ".png";
+                InputStream stream = getClass().getResourceAsStream(fileName);
+                ImageIcon cardImage = new ImageIcon(ImageIO.read(stream));
+                button.setIcon(cardImage);
+                button.setToolTipText("" + cardNum);
+                index++;
+                
+                
+            }
+            
+        } 
+        catch (IOException ex) 
+        {
+            Logger.getLogger(ClientInGameGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        */
+    }
+    
+    public void setGameCode(String gameCode)
+    {
+        this.gameCode = gameCode;
+    }
+    
+    public void setCardIcons(ArrayList<Integer> cards)
+    {
+        try 
+        {
+           
+            for(JToggleButton button : buttons)
+            {
+                int cardNum = cards.get(index);
                 String fileName = "Resources/" + cardNum + ".png";
                 InputStream stream = getClass().getResourceAsStream(fileName);
                 ImageIcon cardImage = new ImageIcon(ImageIO.read(stream));
@@ -113,11 +148,6 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         {
             Logger.getLogger(ClientInGameGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    public void setGameCode(String gameCode)
-    {
-        this.gameCode = gameCode;
     }
 
     /**
@@ -264,24 +294,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         // TODO add your handling code here:
-        try 
-        {
-            int x = index;
-            for(JToggleButton button : buttons)
-            {
-                int cardNum = currentHand.get(x);
-                String fileName = "Resources/" + cardNum + ".png";
-                InputStream stream = getClass().getResourceAsStream(fileName);
-                ImageIcon cardImage = new ImageIcon(ImageIO.read(stream));
-                button.setIcon(cardImage);
-                button.setToolTipText("" + cardNum);
-                x++;
-            }
-        } 
-        catch (IOException ex) 
-        {
-            Logger.getLogger(ClientInGameGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        setCardIcons((ArrayList)currentHand.subList(pageNumber * 8, 7));
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
@@ -294,10 +307,11 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         {
             if(button.isSelected())
             {
-                System.out.println(button.getToolTipText());
+                //System.out.println(button.getToolTipText());
+                comms.cardsPlayed.add(Integer.valueOf(button.getToolTipText()));
             }
         }
-        
+        client.sendTCP(comms);
     }//GEN-LAST:event_playCardButtonActionPerformed
 
     private void callBSButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_callBSButtonActionPerformed
