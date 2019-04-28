@@ -33,8 +33,10 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     int playerNum;
     Client client;
     BSServerCommunication comms;
+    int index = 0;
     ArrayList<JToggleButton> buttons = new ArrayList<>();
     ArrayList<ArrayList<Integer>> hands = new ArrayList<>();
+    ArrayList<Integer> currentHand;
     public ClientInGameGUI(java.awt.Frame parent, boolean modal) 
     {
         super(parent, modal);
@@ -73,14 +75,17 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         
     public void setupCards()
     {
+        
         hands = comms.PlayerHands;
-        ArrayList<Integer> currentHand = hands.get(playerNum);
+        currentHand = hands.get(playerNum);
+        
+        connectionLabel.setText("Connected as: Player " + playerNum);
+        cardToPlayLabel.setText("Card to play is: ");
 
         for(Integer i : currentHand)
         {
             System.out.println("Card number: " + i);
         }
-        int x = 0;
         buttons.add(card1Button);
         buttons.add(card2Button);
         buttons.add(card3Button);
@@ -89,17 +94,19 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         buttons.add(card6Button);
         buttons.add(card7Button);
         buttons.add(card8Button);
+        
         try 
         {
             
             for(JToggleButton button : buttons)
             {
-                int cardNum = currentHand.get(x);
+                int cardNum = currentHand.get(index);
                 String fileName = "Resources/" + cardNum + ".png";
                 InputStream stream = getClass().getResourceAsStream(fileName);
                 ImageIcon cardImage = new ImageIcon(ImageIO.read(stream));
                 button.setIcon(cardImage);
-                x++;
+                button.setToolTipText("" + cardNum);
+                index++;
             }
         } 
         catch (IOException ex) 
@@ -257,6 +264,24 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         // TODO add your handling code here:
+        try 
+        {
+            int x = index;
+            for(JToggleButton button : buttons)
+            {
+                int cardNum = currentHand.get(x);
+                String fileName = "Resources/" + cardNum + ".png";
+                InputStream stream = getClass().getResourceAsStream(fileName);
+                ImageIcon cardImage = new ImageIcon(ImageIO.read(stream));
+                button.setIcon(cardImage);
+                button.setToolTipText("" + cardNum);
+                x++;
+            }
+        } 
+        catch (IOException ex) 
+        {
+            Logger.getLogger(ClientInGameGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
@@ -267,8 +292,12 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         // TODO add your handling code here:
         for(JToggleButton button : buttons)
         {
-            //if(button.)
+            if(button.isSelected())
+            {
+                System.out.println(button.getToolTipText());
+            }
         }
+        
     }//GEN-LAST:event_playCardButtonActionPerformed
 
     private void callBSButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_callBSButtonActionPerformed
