@@ -190,6 +190,11 @@ public class Lobby extends Game
 	LastTurn = comms.currentTurn;
 	comms.currentTurn = Players.poll();
 	Players.add(Turn);
+	if(CurrentCard == 12)
+	    CurrentCard = 0;
+	else
+	    CurrentCard++;
+	comms.CurrentCard = CurrentCard;
         PushComms();
 	}
     }
