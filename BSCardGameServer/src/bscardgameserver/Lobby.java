@@ -103,7 +103,8 @@ public class Lobby extends Game
 		{
 		    //switch cases for playing a card, challenging, and winning
 		    case 0: //card(s) played
-			pile.addCards(comms.cardsPlayed);   //empty cardsplayed before updating the clients
+			pile.addCards(comms.cardsPlayed);
+			comms.PlayerHands.get(comms.actor-1).removeAll(comms.cardsPlayed);
 			comms.cardsPlayed.clear();
 			comms.emptyPile = false;
 			NextPlayer();
@@ -132,9 +133,9 @@ public class Lobby extends Game
 	synchronized(server) {
 	ArrayList challengeDeck = (ArrayList)pile.empty();
 	if (pile.topCard == lastCard) //challenger wrong if condition is met
-	    comms.PlayerHands.get(comms.actor).addAll(challengeDeck);
+	    comms.PlayerHands.get(comms.actor - 1).addAll(challengeDeck);
 	else
-	    comms.PlayerHands.get(comms.actor).addAll(challengeDeck);
+	    comms.PlayerHands.get(comms.actor - 1).addAll(challengeDeck);
 	comms.emptyPile = true;
 	}
     }

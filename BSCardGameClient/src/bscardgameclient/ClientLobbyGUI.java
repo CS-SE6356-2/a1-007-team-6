@@ -26,6 +26,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
     int port;
     public static volatile int playernum = 0;
     public static volatile BSServerCommunication comms;
+    Listener LobbyListener;
     
     public ClientLobbyGUI(String gameCode) 
     {
@@ -47,7 +48,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
         {
 	    //System.out.println(port);
             client.connect(5000, SERVER_IP, port, port);
-            client.addListener(new Listener() 
+            client.addListener(LobbyListener = new Listener() 
             {
                 @Override
                 public void received (Connection connection, Object object) 
@@ -192,7 +193,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
 	ClientInGameGUI inGame = new ClientInGameGUI(this, true);
         inGame.setGameCode(gameCode);
         inGame.setLobbyPort(port);
-	inGame.setNet(client, comms, playernum);
+	inGame.setNet(client, comms, playernum, LobbyListener);
         this.setVisible(false);
         inGame.setVisible(true);
         inGame.toFront();
