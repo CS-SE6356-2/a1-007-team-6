@@ -10,6 +10,7 @@ public class BSServerCommunication {
     
     int currentTurn;
     int previousTurn;
+    int CurrentCard;
     ArrayList<ArrayList<Integer>>  PlayerHands;
     boolean emptyPile;
     
@@ -21,7 +22,7 @@ public class BSServerCommunication {
     
     BSServerCommunication()
     {
-	//PlayerHands = new ArrayList<ArrayList<Integer>>(6);
+	CurrentCard = 0;    //ranges form 0-12 to represent ace-king
 	cardsPlayed = new ArrayList<>();
 	started = false;
     }
