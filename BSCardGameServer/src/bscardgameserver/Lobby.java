@@ -26,7 +26,7 @@ public class Lobby extends Game
     int numPlayers;
     Integer Lobby;
     Integer Winners[];
-    int winners;
+    public int winners;
     int port;
     boolean startcheck;
     boolean testconnection;

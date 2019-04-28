@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.JToggleButton;
@@ -97,31 +98,6 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         buttons.add(card7Button);
         buttons.add(card8Button);
         setCardIcons(currentHand.subList(0, 8));
-        /*
-        try 
-        {
-            
-            
-            for(JToggleButton button : buttons)
-            {
-                
-                int cardNum = currentHand.get(index);
-                String fileName = "Resources/" + cardNum + ".png";
-                InputStream stream = getClass().getResourceAsStream(fileName);
-                ImageIcon cardImage = new ImageIcon(ImageIO.read(stream));
-                button.setIcon(cardImage);
-                button.setToolTipText("" + cardNum);
-                index++;
-                
-                
-            }
-            
-        } 
-        catch (IOException ex) 
-        {
-            Logger.getLogger(ClientInGameGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        */
     }
     
     public void setGameCode(String gameCode)
@@ -320,11 +296,17 @@ public class ClientInGameGUI extends javax.swing.JDialog {
                 comms.cardsPlayed.add(Integer.valueOf(button.getToolTipText()));
             }
         }
+        comms.action = 0;
+        comms.actor = playerNum;
         client.sendTCP(comms);
     }//GEN-LAST:event_playCardButtonActionPerformed
 
     private void callBSButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_callBSButtonActionPerformed
         // TODO add your handling code here:
+        comms.action = 1;
+        comms.actor = playerNum;
+        client.sendTCP(comms);
+        JOptionPane.showMessageDialog(null, "You just called BS on "  + (playerNum - 1), "BS Called", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_callBSButtonActionPerformed
 
     /**
