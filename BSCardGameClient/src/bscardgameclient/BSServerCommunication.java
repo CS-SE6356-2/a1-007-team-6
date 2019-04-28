@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class BSServerCommunication {
     Integer lobby;
     int numPlayers;
+    int numWinners;
     boolean started;
     String confirmR = "Recieved"; //reciept confirmation
     
@@ -25,5 +26,6 @@ public class BSServerCommunication {
 	CurrentCard = 0;    //ranges form 0-12 to represent ace-king
 	cardsPlayed = new ArrayList<>();
 	started = false;
+	numWinners = 0;
     }
 }

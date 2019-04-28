@@ -103,7 +103,7 @@ public class Lobby extends Game
 		{
 		    //switch cases for playing a card, challenging, and winning
 		    case 0: //card(s) played
-			pile.addCards(comms.cardsPlayed);
+			pile.addCards(comms.cardsPlayed);   //empty cardsplayed before updating the clients
 			comms.emptyPile = false;
 			NextPlayer();
 			break;
