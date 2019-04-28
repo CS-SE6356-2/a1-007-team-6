@@ -24,6 +24,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
     final String SERVER_IP = "127.0.0.1";
     Client client;
     int port;
+    public static volatile int playernum = 0;
     public static volatile BSServerCommunication comms;
     
     public ClientLobbyGUI(String gameCode) 
@@ -57,6 +58,10 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
 		    {
 			comms = (BSServerCommunication)object;
 			System.out.println("Player has connected to: " + comms.lobby);
+			if(playernum == 0)
+			{
+			    playernum = comms.numPlayers;
+			}
 			if(comms.started)
 			{			    
 			    client.notify();
@@ -187,7 +192,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
 	ClientInGameGUI inGame = new ClientInGameGUI(this, true);
         inGame.setGameCode(gameCode);
         inGame.setLobbyPort(port);
-	inGame.setNet(client, comms);
+	inGame.setNet(client, comms, playernum);
         this.setVisible(false);
         inGame.setVisible(true);
         inGame.toFront();
