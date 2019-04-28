@@ -8,6 +8,8 @@ public class BSServerCommunication {
     int numWinners;
     boolean started;
     String confirmR = "Recieved"; //reciept confirmation
+    String previousActionLog = "";
+    String currentActionLog = "";
     
     int currentTurn;
     int previousTurn;
