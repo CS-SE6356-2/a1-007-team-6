@@ -36,6 +36,8 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     int lobbyPort;
     int playerNum;
     int pageNumber = 0;
+    String previousActionLog = "";
+    String currentActionLog = "";
     Client client;
     Listener GameListener;
     BSServerCommunication comms;
@@ -74,6 +76,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 		{
 		    comms = (BSServerCommunication)object;
 		    //add update sequence here for anytime server pushes something new
+                    currentActionLogLabel.setText(comms.currentActionLog);
 		}
 		}
 	    }
@@ -160,6 +163,8 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         card7Button = new javax.swing.JToggleButton();
         card8Button = new javax.swing.JToggleButton();
         card4Button = new javax.swing.JToggleButton();
+        previousActionLogLabel = new javax.swing.JLabel();
+        currentActionLogLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -196,6 +201,10 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         connectionLabel.setText("Connected as...");
 
         cardToPlayLabel.setText("Card to play is: ");
+
+        previousActionLogLabel.setText("Status: ");
+
+        currentActionLogLabel.setText("Status:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -241,15 +250,16 @@ public class ClientInGameGUI extends javax.swing.JDialog {
                                 .addGap(18, 18, 18)
                                 .addComponent(card8Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
-                                .addComponent(nextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(nextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(currentActionLogLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(previousActionLogLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(530, 530, 530)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(connectionLabel)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -270,10 +280,18 @@ public class ClientInGameGUI extends javax.swing.JDialog {
                     .addComponent(card5Button, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card8Button, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card7Button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 153, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(callBSButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(playCardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                .addComponent(previousActionLogLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(currentActionLogLabel)
+                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(connectionLabel)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(callBSButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(playCardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         pack();
@@ -373,9 +391,11 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     private javax.swing.JToggleButton card8Button;
     private javax.swing.JLabel cardToPlayLabel;
     private javax.swing.JLabel connectionLabel;
+    private javax.swing.JLabel currentActionLogLabel;
     private javax.swing.JLabel lastPlayLabel;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton playCardButton;
+    private javax.swing.JLabel previousActionLogLabel;
     private javax.swing.JButton previousButton;
     // End of variables declaration//GEN-END:variables
 }

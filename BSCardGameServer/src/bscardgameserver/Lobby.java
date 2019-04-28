@@ -114,6 +114,7 @@ public class Lobby extends Game
 			break;
 		    case 2: //winner claimed; decide for serverside or client side checking
 			Winners[winners] = comms.actor;
+                        comms.currentActionLog = "Player " + (comms.actor) + " has won!"; 
 			break;
 		    default:	//error message
 			System.out.println("Inproper action recieved by client");
@@ -130,14 +131,22 @@ public class Lobby extends Game
 
     public void Challenged()
     {
-	synchronized(server) {
-	ArrayList challengeDeck = (ArrayList)pile.empty();
-	if (pile.topCard == lastCard) //challenger wrong if condition is met
-	    comms.PlayerHands.get(comms.actor - 1).addAll(challengeDeck);
-	else
-	    comms.PlayerHands.get(comms.actor - 1).addAll(challengeDeck);
-	comms.emptyPile = true;
-	}
+	synchronized(server) 
+        {
+            ArrayList challengeDeck = (ArrayList)pile.empty();
+            if (pile.topCard == lastCard)
+            {
+                //challenger wrong if condition is met
+                comms.PlayerHands.get(comms.actor - 1).addAll(challengeDeck);
+                comms.currentActionLog = "Player " + (comms.actor) + " has called BS on " + (comms.actor - 1) + " and was wrong"; 
+            }
+            else
+            {
+                comms.PlayerHands.get(comms.actor - 1).addAll(challengeDeck);
+                comms.emptyPile = true;
+                comms.currentActionLog = "Player " + (comms.actor) + " has called BS on " + (comms.actor - 1) + " and was correct"; 
+            }
+        }
     }
 
     public void StartGame()

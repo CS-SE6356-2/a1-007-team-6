@@ -11,3 +11,6 @@ After cloning the repository, open the project folder under NetBeans > Open Proj
 
 ## Server setup
 Runtime is the same as the Environment Setup above. Machine running the server project will need to open port ranges for communication over the internet with the clients.
+
+## Download and run client binary (JAR)
+We have a precompiled binary packaged in a JAR which uses our hosted game server available under [Releases](https://github.com/CS-SE6356-2/a1-007-team-6/releases)
