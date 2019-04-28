@@ -5,7 +5,7 @@
  */
 package BSCardGameServer;
 
-//import BSCardGameServer.BSServerCommunication;
+import bscardgameserver.BSServerCommunication;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,11 +19,11 @@ import static org.junit.Assert.*;
  */
 public class BSServerCommunicationTest {
     
-    //BSServerCommunication b = new BSServerCommunication();
+    BSServerCommunication b = new BSServerCommunication();
     
     @Test
 	public void serverCreated()
 	{
-            //assertEquals(0, b.cardsPlayed.size());   
+            assertEquals(0, b.cardsPlayed.size());   
         }
 }
