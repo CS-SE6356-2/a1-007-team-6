@@ -20,7 +20,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
     /**
      * Creates new form ClientLobbyGUI
      */
-    String gameCode = "";
+    public String gameCode = "";
     final String SERVER_IP = "127.0.0.1";
     Client client;
     int port;
