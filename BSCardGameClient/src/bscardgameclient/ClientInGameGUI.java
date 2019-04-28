@@ -7,6 +7,8 @@ package bscardgameclient;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,20 +37,24 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     int playerNum;
     int pageNumber = 0;
     Client client;
+    Listener GameListener;
     BSServerCommunication comms;
     int index = 0;
     ArrayList<JToggleButton> buttons = new ArrayList<>();
     ArrayList<ArrayList<Integer>> hands = new ArrayList<>();
     ArrayList<Integer> currentHand;
+    
+    
     public ClientInGameGUI(java.awt.Frame parent, boolean modal) 
     {
         super(parent, modal);
         initComponents();
         setResizable(false);
     }
-    public void setNet(Client client, BSServerCommunication comm, int playerNum)
+    public void setNet(Client client, BSServerCommunication comm, int playerNum, Listener LobbyListener)
     {
 	this.client = client;
+	this.client.removeListener(LobbyListener);
 	this.comms = comm;
 	this.playerNum = playerNum;
 	System.out.println(comms.lobby);
@@ -57,18 +63,21 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         
     public void initializeCommClient()
     {
-        try
-        {
-            //client = new Client();
-            Kryo kryo = client.getKryo();
-            kryo.register(BSServerCommunication.class);
-            kryo.register(java.util.ArrayList.class);
-            new Thread(client).start();
-        }
-        catch(Exception e)
-        {
-            System.out.println("Unable to initialize communication client");
-        }
+	client.addListener(GameListener = new Listener() 
+	{
+	    @Override
+	    public void received (Connection connection, Object object) 
+	    {
+		synchronized(client)    
+		{ 
+		if (object instanceof BSServerCommunication) 
+		{
+		    comms = (BSServerCommunication)object;
+		    //add update sequence here for anytime server pushes something new
+		}
+		}
+	    }
+	});
     }
     
     public void setLobbyPort(int lobbyPort)
