@@ -45,6 +45,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     {
 	this.client = client;
 	this.comms = comm;
+	this.playerNum = playerNum - 1;
 	System.out.println(comms.lobby);
 	setupCards();
     }
