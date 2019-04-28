@@ -96,7 +96,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         buttons.add(card6Button);
         buttons.add(card7Button);
         buttons.add(card8Button);
-        setCardIcons(currentHand.subList(0, 7));
+        setCardIcons(currentHand.subList(0, 8));
         /*
         try 
         {
@@ -133,7 +133,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     {
         try 
         {
-           
+	    index = 0;
             for(JToggleButton button : buttons)
             {
                 int cardNum = cards.get(index);
@@ -295,7 +295,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         // TODO add your handling code here:
-        setCardIcons((currentHand.subList(pageNumber * 8, (pageNumber+1)*8-1 > currentHand.size() ? currentHand.size() : (pageNumber+1)*8-1)));
+        setCardIcons((currentHand.subList(pageNumber * 8, (pageNumber+1)*8-1 > currentHand.size() ? currentHand.size()+1 : (pageNumber+1)*8)));
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
