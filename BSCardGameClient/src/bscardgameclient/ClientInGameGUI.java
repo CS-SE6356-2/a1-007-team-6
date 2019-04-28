@@ -76,6 +76,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 		{
 		    comms = (BSServerCommunication)object;
 		    //add update sequence here for anytime server pushes something new
+                    currentActionLogLabel.setText(comms.currentActionLog);
 		}
 		}
 	    }
