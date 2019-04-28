@@ -42,18 +42,9 @@ public class GameTest {
                 Game g = new Game();
                 for(int i = 0; i < 100; i++){
                     client.connect(5000, "127.0.0.1", 54777, 54777);
-                    
-                assertEquals(600, g.portcounter);
-                
-                if (object instanceof BSServerCommunication) 
-		    {
-			comm = (BSServerCommunication)object;
-			gameCode = comm.lobby.toString();
-			lobbyPort = BASE_PORT + Integer.parseInt(gameCode);
-			System.out.println("Connected");
-		    }
-		    connection.close();
+                    g.portcounter++;
                 }
+                assertEquals(600, g.portcounter);
             }
             catch(Exception e)
             {
