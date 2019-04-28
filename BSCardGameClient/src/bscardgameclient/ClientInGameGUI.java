@@ -30,6 +30,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
      */
     String gameCode = "";
     int lobbyPort;
+    int playerNum;
     Client client;
     BSServerCommunication comms;
     ArrayList<JToggleButton> buttons = new ArrayList<>();
@@ -40,7 +41,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         initComponents();
         setResizable(false);
     }
-    public void setNet(Client client, BSServerCommunication comm)
+    public void setNet(Client client, BSServerCommunication comm, int playerNum)
     {
 	this.client = client;
 	this.comms = comm;
@@ -72,12 +73,11 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     public void setupCards()
     {
         hands = comms.PlayerHands;
-        for(ArrayList<Integer> card : hands)
+        ArrayList<Integer> currentHand = hands.get(playerNum);
+
+        for(Integer i : currentHand)
         {
-            for(Integer i : card)
-            {
-                System.out.println("Card number: " + i);
-            }
+            System.out.println("Card number: " + i);
         }
         int x = 0;
         buttons.add(card1Button);
@@ -93,7 +93,8 @@ public class ClientInGameGUI extends javax.swing.JDialog {
             
             for(JToggleButton button : buttons)
             {
-                String fileName = "Resources/" + x + ".png";
+                int cardNum = currentHand.get(x);
+                String fileName = "Resources/" + cardNum + ".png";
                 InputStream stream = getClass().getResourceAsStream(fileName);
                 ImageIcon cardImage = new ImageIcon(ImageIO.read(stream));
                 button.setIcon(cardImage);

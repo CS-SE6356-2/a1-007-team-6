@@ -173,7 +173,7 @@ public class Lobby extends Game
 	for(int i = 0; i < numPlayers; i++)
 	{
 	    comms.PlayerHands.add(new ArrayList<Integer>(Arrays.asList(0, 0)));
-	    
+	    comms.PlayerHands.get(i).clear();
 	    for(int j = 0; j < each; j++)
 	    {
 		comms.PlayerHands.get(i).add(deck.remove(0));
