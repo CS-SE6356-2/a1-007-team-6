@@ -53,10 +53,10 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         initComponents();
         setResizable(false);
     }
-    public void setNet(Client client, BSServerCommunication comm, int playerNum, Listener LobbyListener)
+    public void setNet(Client client, BSServerCommunication comm, int playerNum)
     {
 	this.client = client;
-	this.client.removeListener(LobbyListener);
+	//this.client.removeListener(LobbyListener);
 	this.comms = comm;
 	this.playerNum = playerNum; //starts at 1
 	initializeCommClient();
@@ -66,7 +66,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         
     public void initializeCommClient()
     {
-	client.addListener(GameListener = new Listener() 
+	client.addListener(new Listener() 
 	{
 	    @Override
 	    public void received (Connection connection, Object object) 
@@ -76,9 +76,10 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 		if (object instanceof BSServerCommunication) 
 		{
 		    comms = (BSServerCommunication)object;
+		    System.out.println("gotcha");
 		    //add update sequence here for anytime server pushes something new
-                    currentActionLogLabel.setText(comms.currentActionLog);
-                    System.out.println("Recieved: " + comms.currentActionLog);
+                    //currentActionLogLabel.setText(comms.currentActionLog);
+		    //System.out.println("Recieved: " + comms.currentActionLog);
 		}
 		}
 	    }

@@ -192,11 +192,12 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_startGameNowButtonActionPerformed
     public void launchGameGUI()
     {
+	this.client.removeListener(LobbyListener);
 	//System.out.println("We're in the inGame now");
 	ClientInGameGUI inGame = new ClientInGameGUI(this, true);
         inGame.setGameCode(gameCode);
         inGame.setLobbyPort(port);
-	inGame.setNet(client, comms, playernum, LobbyListener);
+	inGame.setNet(client, comms, playernum);
         this.setVisible(false);
         inGame.setVisible(true);
         inGame.toFront();

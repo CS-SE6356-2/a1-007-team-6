@@ -19,7 +19,7 @@ public class BSServerCommunication {
     
     int actor;//player number
     int action;//what they did: 0 is play a card, 1 is challenge, 2 is win
-    ArrayList<Integer> cardsPlayed;
+    public ArrayList<Integer> cardsPlayed;
     
     
     
