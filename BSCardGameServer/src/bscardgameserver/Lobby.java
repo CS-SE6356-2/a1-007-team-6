@@ -103,14 +103,19 @@ public class Lobby extends Game
 		{
 		    //switch cases for playing a card, challenging, and winning
 		    case 0: //card(s) played
-			pile.addCards(comms.cardsPlayed);
-                        System.out.println("Someone is playing a card");
-			comms.PlayerHands.get(comms.actor).removeAll(comms.cardsPlayed);
-			int numcards = comms.cardsPlayed.size();
-			newMSG("Player " + Integer.toString(comms.actor + 1) + " played " + numcards + toCard(lastCard) + (numcards > 1 ? "s" : ""));
-			comms.cardsPlayed.clear();
-			comms.emptyPile = false;
-			NextPlayer();
+			if(!comms.cardsPlayed.isEmpty())
+			{
+			    pile.addCards(comms.cardsPlayed);
+			    System.out.println("Someone is playing a card");
+			    comms.PlayerHands.get(comms.actor).removeAll(comms.cardsPlayed);
+			    int numcards = comms.cardsPlayed.size();
+			    newMSG("Player " + Integer.toString(comms.actor + 1) + " played " + numcards + toCard(lastCard) + (numcards > 1 ? "s" : ""));
+			    comms.cardsPlayed.clear();
+			    comms.emptyPile = false;
+			    NextPlayer();
+			}
+			else
+			    System.out.println("phantom cards played");
 			break;
 		    case 1: //challenged
 			Challenged();
@@ -224,6 +229,7 @@ public class Lobby extends Game
     public void PushComms()
     {
 	synchronized(server) {
+	System.out.println("pushing");
         //server.sendToAllTCP(comms);
 	Iterator clients = connections.iterator();
         while(clients.hasNext())
