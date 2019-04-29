@@ -2,23 +2,24 @@ package bscardgameclient;
 
 import java.util.ArrayList;
 
-public class BSServerCommunication {
+public class BSServerCommunication 
+{
     public Integer lobby;
-    int numPlayers;
-    int numWinners;
-    boolean started;
-    String confirmR = "Recieved"; //reciept confirmation
-    String previousActionLog = "";
-    String currentActionLog = "";
+    public int numPlayers;
+    public int numWinners;
+    public boolean started;
+    public String confirmR = "Recieved"; //reciept confirmation
+    public String previousActionLog = "";
+    public String currentActionLog = "";
     
-    int currentTurn;
-    int previousTurn;
-    int CurrentCard;
-    ArrayList<ArrayList<Integer>>  PlayerHands;
-    boolean emptyPile;
+    public int currentTurn;
+    public int previousTurn;
+    public int CurrentCard;
+    public ArrayList<ArrayList<Integer>>  PlayerHands;
+    public boolean emptyPile;
     
-    int actor;//player number
-    int action;//what they did: 0 is play a card, 1 is challenge, 2 is win
+    public int actor;//player number
+    public int action;//what they did: 0 is play a card, 1 is challenge, 2 is win
     public ArrayList<Integer> cardsPlayed;
     
     
