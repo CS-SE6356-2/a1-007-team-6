@@ -98,7 +98,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         currentHand = hands.get(playerNum - 1);
         
         connectionLabel.setText("Connected as: Player " + playerNum);
-        cardToPlayLabel.setText("Card to play is: ");
+        cardToPlayLabel.setText("Card to play is: " + toCard(comms.CurrentCard));
 
         for(Integer i : currentHand)
         {
@@ -113,6 +113,41 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         buttons.add(card7Button);
         buttons.add(card8Button);
         setCardIcons(currentHand.subList(0, 8));
+    }
+    
+    public String toCard(int c)
+    {
+	switch(c)
+	{
+	    case 0:
+		return "Ace";
+	    case 1:
+		return "Two";
+	    case 2:
+		return "Three";
+	    case 3:
+		return "Four";
+	    case 4:
+		return "Five";
+	    case 5:
+		return "Six";
+	    case 6:
+		return "Seven";
+	    case 7:
+		return "Eight";
+	    case 8:
+		return "Nine";
+	    case 9:
+		return "Ten";
+	    case 10:
+		return "Jack";
+	    case 11:
+		return "Queen";
+	    case 12:
+		return "King";
+	    default:
+		return "Invalid Card";
+	}
     }
     
     public void setGameCode(String gameCode)
