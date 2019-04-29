@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.JToggleButton;
+import javax.swing.WindowConstants;
 
 /**
  *
@@ -52,6 +53,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setResizable(false);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
     public void setNet(Client client, BSServerCommunication comm, int playerNum, Listener LobbyListener)
     {
@@ -95,7 +97,6 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         currentHand = hands.get(playerNum - 1);
         
         connectionLabel.setText("Connected as: Player " + playerNum);
-        cardToPlayLabel.setText("Card to play is: ");
 
         for(Integer i : currentHand)
         {
@@ -152,9 +153,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         callBSButton = new javax.swing.JButton();
         previousButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
-        lastPlayLabel = new javax.swing.JLabel();
         connectionLabel = new javax.swing.JLabel();
-        cardToPlayLabel = new javax.swing.JLabel();
         card2Button = new javax.swing.JToggleButton();
         card1Button = new javax.swing.JToggleButton();
         card3Button = new javax.swing.JToggleButton();
@@ -196,11 +195,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
             }
         });
 
-        lastPlayLabel.setText("Last Play: ");
-
         connectionLabel.setText("Connected as...");
-
-        cardToPlayLabel.setText("Card to play is: ");
 
         previousActionLogLabel.setText("Status: ");
 
@@ -221,26 +216,18 @@ public class ClientInGameGUI extends javax.swing.JDialog {
                         .addComponent(playCardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(previousButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 165, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(card1Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(card5Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(312, 312, 312)
-                                .addComponent(lastPlayLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cardToPlayLabel)
-                                .addGap(15, 15, 15))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(card1Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(card5Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(card2Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(card6Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(card7Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(card3Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(card2Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(card6Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(card7Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(card3Button, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(14, 14, 14)
@@ -261,11 +248,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lastPlayLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cardToPlayLabel))
-                .addGap(31, 31, 31)
+                .addGap(70, 70, 70)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(card1Button, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card2Button, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -389,10 +372,8 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     private javax.swing.JToggleButton card6Button;
     private javax.swing.JToggleButton card7Button;
     private javax.swing.JToggleButton card8Button;
-    private javax.swing.JLabel cardToPlayLabel;
     private javax.swing.JLabel connectionLabel;
     private javax.swing.JLabel currentActionLogLabel;
-    private javax.swing.JLabel lastPlayLabel;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton playCardButton;
     private javax.swing.JLabel previousActionLogLabel;
