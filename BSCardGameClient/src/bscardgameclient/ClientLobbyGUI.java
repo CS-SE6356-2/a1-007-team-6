@@ -10,6 +10,7 @@ import com.esotericsoftware.kryo.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -177,16 +178,16 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
     private void startGameNowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startGameNowButtonActionPerformed
 	synchronized(client)
 	{
-	    comms.started = true;
-	    client.sendTCP(comms);
-	    /*try {
-		System.out.println("waiting");
-		client.wait();
-		System.out.println("notified");
-		//client.close();
-	    } catch (InterruptedException ex) {
-		Logger.getLogger(ClientLobbyGUI.class.getName()).log(Level.SEVERE, null, ex);
-	    }*/
+            if(comms.numPlayers >= 3)
+            {
+                comms.started = true;
+                client.sendTCP(comms);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "You need at least 3 players to start the game", "Not Enough Players", JOptionPane.ERROR_MESSAGE);
+            }
+
 	}
     }//GEN-LAST:event_startGameNowButtonActionPerformed
     public void launchGameGUI()
