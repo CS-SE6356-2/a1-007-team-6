@@ -104,6 +104,7 @@ public class Lobby extends Game
 		    //switch cases for playing a card, challenging, and winning
 		    case 0: //card(s) played
 			pile.addCards(comms.cardsPlayed);
+                        System.out.println("Someone is playing a card");
 			comms.PlayerHands.get(comms.actor).removeAll(comms.cardsPlayed);
 			int numcards = comms.cardsPlayed.size();
 			newMSG("Player " + Integer.toString(comms.actor + 1) + " played " + numcards + toCard(lastCard) + (numcards > 1 ? "s" : ""));

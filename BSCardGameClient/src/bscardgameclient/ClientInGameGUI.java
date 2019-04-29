@@ -78,6 +78,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 		    comms = (BSServerCommunication)object;
 		    //add update sequence here for anytime server pushes something new
                     currentActionLogLabel.setText(comms.currentActionLog);
+                    System.out.println("Recieved: " + comms.currentActionLog);
 		}
 		}
 	    }
@@ -329,10 +330,11 @@ public class ClientInGameGUI extends javax.swing.JDialog {
             {
                 //System.out.println(button.getToolTipText());
                 comms.cardsPlayed.add(Integer.valueOf(button.getToolTipText()));
+                System.out.println("Selected: " + Integer.valueOf(button.getToolTipText()));
             }
         }
         comms.action = 0;
-        comms.actor = playerNum;
+        comms.actor = playerNum - 1;
         client.sendTCP(comms);
     }//GEN-LAST:event_playCardButtonActionPerformed
 
