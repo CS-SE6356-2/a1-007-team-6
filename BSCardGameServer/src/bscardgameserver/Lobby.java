@@ -59,12 +59,13 @@ public class Lobby extends Game
 	
 	server.addListener(new Listener() 
 	{
+	    
             @Override
             public void connected (Connection connection) 
             {
 		System.out.println("connection");
 		synchronized(server) {
-		if (!connections.contains(connection))
+		/*if (!connections.contains(connection))
 		{
 		    if (connections.isEmpty())
 		    {
@@ -82,8 +83,8 @@ public class Lobby extends Game
 			connections.add(connection);
 			testconnection = true;
 		    }
-		    comms.numPlayers = connections.size();//server.getConnections().length;
-		}
+		    //comms.numPlayers = connections.size();//server.getConnections().length;
+		}*/
 		PushComms();
 		}
             }
@@ -236,12 +237,12 @@ public class Lobby extends Game
     {
 	synchronized(server) {
 	System.out.println("pushing");
-        //server.sendToAllTCP(comms);
-	Iterator clients = connections.iterator();
+        server.sendToAllTCP(comms);
+	/*Iterator clients = connections.iterator();
         while(clients.hasNext())
         {
             ((Connection)clients.next()).sendTCP(comms);
-        }
+        }*/
 		//System.out.println("pushed");
 		
 	}

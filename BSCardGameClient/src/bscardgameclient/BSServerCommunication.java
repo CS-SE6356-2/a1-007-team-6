@@ -30,5 +30,6 @@ public class BSServerCommunication
 	cardsPlayed = new ArrayList<>();
 	started = false;
 	numWinners = 0;
+	numPlayers = 0;
     }
 }
