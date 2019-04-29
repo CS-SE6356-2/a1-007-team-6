@@ -181,7 +181,7 @@ public class GameRunner
 			comms = (BSServerCommunication)object;
 			gameCode = comms.lobby.toString();
 			lobbyPort = BASE_PORT + Integer.parseInt(gameCode);
-			System.out.println("Connecting to lobby: " + gameCode);
+			//System.out.println("Connecting to lobby: " + gameCode);
 		    }
                     client.notify();
 		    connection.close();

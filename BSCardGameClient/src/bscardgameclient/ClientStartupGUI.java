@@ -150,7 +150,7 @@ public class ClientStartupGUI extends javax.swing.JDialog {
        }
        else
        {
-           System.out.println(gameCode);
+           //System.out.println(gameCode);
            // Start the game runner
            GameRunner runner = new GameRunner(gameCode, false);
        }

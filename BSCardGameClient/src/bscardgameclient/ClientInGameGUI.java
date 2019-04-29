@@ -83,7 +83,6 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 		}
 	    }
 	});
-		    System.out.println("endlistener");
     }
     
     public void setLobbyPort(int lobbyPort)
@@ -100,10 +99,10 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         connectionLabel.setText("Connected as: Player " + playerNum);
         cardToPlayLabel.setText("Card to play is: " + toCard(comms.CurrentCard));
 
-        for(Integer i : currentHand)
+        /*for(Integer i : currentHand)
         {
             System.out.println("Card number: " + i);
-        }
+        }*/
         buttons.add(card1Button);
         buttons.add(card2Button);
         buttons.add(card3Button);
@@ -113,6 +112,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         buttons.add(card7Button);
         buttons.add(card8Button);
         setCardIcons(currentHand.subList(0, 8));
+	updateComms();
     }
     
     public String toCard(int c)
@@ -365,7 +365,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         }
         comms.action = 0;
         comms.actor = playerNum - 1;
-	//System.out.println(client.isConnected());
+	System.out.println(client.isConnected());
 	updateComms();
         //client.sendTCP(comms);
 	//System.out.println("in client after send");

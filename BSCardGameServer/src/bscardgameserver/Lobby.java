@@ -107,6 +107,8 @@ public class Lobby extends Game
 		    {
 			//switch cases for playing a card, challenging, and winning
 			case 0: //card(s) played
+			    if(!comms.cardsPlayed.isEmpty())
+			    {
 			    pile.addCards(comms.cardsPlayed);
 			    System.out.println("Someone is playing a card");
 			    comms.PlayerHands.get(comms.actor).removeAll(comms.cardsPlayed);
@@ -115,6 +117,9 @@ public class Lobby extends Game
 			    comms.cardsPlayed.clear();
 			    comms.emptyPile = false;
 			    NextPlayer();
+			    }
+			    else
+				System.out.println("nothingplayed");
 			    break;
 			case 1: //challenged
 			    Challenged();
@@ -237,6 +242,7 @@ public class Lobby extends Game
             ((Connection)clients.next()).sendTCP(comms);
         }
 		System.out.println("pushed");
+		
 	}
     }
     
