@@ -86,6 +86,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 		    System.out.println("endlistener");
     }
     
+    //met
     public void setLobbyPort(int lobbyPort)
     {
         this.lobbyPort = lobbyPort;
