@@ -137,7 +137,7 @@ public class GameRunner
 		     }
 		     else
 		     {
-		       System.out.println("Connecting to lobby: " + comms.lobby);
+		       //System.out.println("Connecting to lobby: " + comms.lobby);
 		     }
                     client.notify();
                     connection.close();
