@@ -22,7 +22,7 @@ public class Lobby extends Game
     int Turn;
     int LastTurn;
     int CurrentCard;
-    ArrayList<Integer> lastCard;
+    int lastCard;
     int numPlayers;
     Integer Lobby;
     Integer Winners[];
@@ -105,6 +105,8 @@ public class Lobby extends Game
 		    case 0: //card(s) played
 			pile.addCards(comms.cardsPlayed);
 			comms.PlayerHands.get(comms.actor).removeAll(comms.cardsPlayed);
+			int numcards = comms.cardsPlayed.size();
+			newMSG("Player " + Integer.toString(comms.actor + 1) + " played " + numcards + toCard(lastCard) + (numcards > 1 ? "s" : ""));
 			comms.cardsPlayed.clear();
 			comms.emptyPile = false;
 			NextPlayer();
@@ -113,8 +115,9 @@ public class Lobby extends Game
 			Challenged();
 			break;
 		    case 2: //winner claimed; decide for serverside or client side checking
-			Winners[winners] = comms.actor;
-                        comms.currentActionLog = "Player " + (comms.actor) + " has won!"; 
+			Winners[winners] = comms.actor + 1;
+                        newMSG(comms.currentActionLog = "Player " + (comms.actor + 1) + " has won!"); 
+			winners++;
 			break;
 		    default:	//error message
 			System.out.println("Inproper action recieved by client");
@@ -129,22 +132,27 @@ public class Lobby extends Game
 	}
     }
 
-    public void Challenged()
+    public boolean Challenged()
     {
 	synchronized(server) 
         {
             ArrayList challengeDeck = (ArrayList)pile.empty();
-            if (pile.topCard == lastCard)
+	    ArrayList<Integer> anticipated = new ArrayList<>();
+	    anticipated.add(lastCard);
+	    pile.topCard.removeAll(anticipated);
+            if (pile.topCard.size() == 0)
             {
                 //challenger wrong if condition is met
-                comms.PlayerHands.get(comms.actor - 1).addAll(challengeDeck);
-                comms.currentActionLog = "Player " + (comms.actor) + " has called BS on " + (comms.actor - 1) + " and was wrong"; 
+                comms.PlayerHands.get(comms.previousTurn-1).addAll(challengeDeck);
+                newMSG(comms.currentActionLog = "Player " + (comms.actor + 1) + " has called BS on " + (comms.previousTurn) + " and was wrong"); 
+		return false;
             }
             else
             {
-                comms.PlayerHands.get(comms.actor - 1).addAll(challengeDeck);
+                comms.PlayerHands.get(comms.previousTurn-1).addAll(challengeDeck);
                 comms.emptyPile = true;
-                comms.currentActionLog = "Player " + (comms.actor) + " has called BS on " + (comms.actor - 1) + " and was correct"; 
+                newMSG(comms.currentActionLog = "Player " + (comms.actor + 1) + " has called BS on " + (comms.previousTurn) + " and was correct"); 
+		return true;
             }
         }
     }
@@ -221,6 +229,47 @@ public class Lobby extends Game
         {
             ((Connection)clients.next()).sendTCP(comms);
         }
+	}
+    }
+    
+    public void newMSG(String str)
+    {
+	comms.previousActionLog = comms.currentActionLog;
+	comms.currentActionLog = str;
+    }
+    
+    public String toCard(int c)
+    {
+	switch(c)
+	{
+	    case 0:
+		return "Ace";
+	    case 1:
+		return "Two";
+	    case 2:
+		return "Three";
+	    case 3:
+		return "Four";
+	    case 4:
+		return "Five";
+	    case 5:
+		return "Six";
+	    case 6:
+		return "Seven";
+	    case 7:
+		return "Eight";
+	    case 8:
+		return "Nine";
+	    case 9:
+		return "Ten";
+	    case 10:
+		return "Jack";
+	    case 11:
+		return "Queen";
+	    case 12:
+		return "King";
+	    default:
+		return "Invalid Card";
 	}
     }
     public void setcomm(BSServerCommunication com)
