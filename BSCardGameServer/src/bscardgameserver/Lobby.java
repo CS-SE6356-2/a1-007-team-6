@@ -31,12 +31,16 @@ public class Lobby extends Game
     boolean startcheck;
     boolean testconnection;
     public static volatile BSServerCommunication comms;
-    Server server = new Server();
+    Server server= new Server();
     Kryo kryo = server.getKryo(); 
+
 
     public Lobby(BSServerCommunication lobbyCreated) 
     {
 	synchronized(server) {
+	kryo.register(BSServerCommunication.class);
+	kryo.register(java.util.ArrayList.class);
+	server.start();
 	comms = lobbyCreated;
 	Lobby = comms.lobby;
 	Players = new LinkedList<>();
@@ -47,10 +51,6 @@ public class Lobby extends Game
         connections = new ArrayList<>();
         port = 54000 + Lobby;
 	
-	kryo.register(BSServerCommunication.class);
-        kryo.register(java.util.ArrayList.class);
-	//comms = new BSServerCommunication(Lobby);
-	server.start();
 	try {
 	    server.bind(port, port);
 	} catch (IOException ex) {
@@ -59,7 +59,6 @@ public class Lobby extends Game
 	
 	server.addListener(new Listener() 
 	{
-	    
             @Override
             public void connected (Connection connection) 
             {
@@ -96,7 +95,6 @@ public class Lobby extends Game
 	    {
 		System.out.println("recieved something");
 		setcomm((BSServerCommunication)object);
-		    //BSServerCommunication comms = (BSServerCommunication)object;
 		if (!startcheck && comms.started)
 		{
 		    startcheck = true;
@@ -108,6 +106,9 @@ public class Lobby extends Game
 		    switch(comms.action)
 		    {
 			//switch cases for playing a card, challenging, and winning
+			case -1:
+			    System.out.println("new client incremented playernum");
+			    break;
 			case 0: //card(s) played
 			    if(!comms.cardsPlayed.isEmpty())
 			    {
@@ -115,7 +116,7 @@ public class Lobby extends Game
 			    System.out.println("Someone is playing a card");
 			    comms.PlayerHands.get(comms.actor).removeAll(comms.cardsPlayed);
 			    int numcards = comms.cardsPlayed.size();
-			    newMSG("Player " + Integer.toString(comms.actor + 1) + " played " + numcards + toCard(lastCard) + (numcards > 1 ? "s" : ""));
+			    newMSG("Player " + Integer.toString(comms.actor + 1) + " played " + numcards + " " + toCard(lastCard) + (numcards > 1 ? "s" : ""));
 			    comms.cardsPlayed.clear();
 			    comms.emptyPile = false;
 			    NextPlayer();
@@ -292,8 +293,8 @@ public class Lobby extends Game
     {
 	comms = com;
     }
-    public void getcomm(BSServerCommunication com)
+    public BSServerCommunication getcomm()
     {
-	com = comms;
+	return comms;
     }
 }

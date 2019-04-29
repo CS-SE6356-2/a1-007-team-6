@@ -28,7 +28,7 @@ public class DiscardPile
 		List<Integer> copy;
                 copy = new ArrayList<>(pile);
                 pile.clear();
-		topCard = null;
+		//topCard = null;
                 return copy;
 	}
 

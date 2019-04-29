@@ -69,7 +69,7 @@ public class GameRunner
     
     public GameRunner(String gameCode, boolean isLobbyCreator)
     {
-	comms = new BSServerCommunication();
+	//comms = new BSServerCommunication();
         this.isLobbyCreator = isLobbyCreator;
 	initializeCommClient();
 	if(isLobbyCreator)
@@ -95,7 +95,6 @@ public class GameRunner
         lobby.setVisible(true);
         lobby.toFront();
         lobby.repaint();
-        //client.stop();
     }
     public void initializeCommClient()
     {
@@ -119,7 +118,6 @@ public class GameRunner
         try
         {
             // Connect to game server lobby with the provided game code
-            client.connect(5000, SERVER_IP, lobbyPort, lobbyPort);
 	    Listener tempListener;
             client.addListener(tempListener = new Listener() 
             {
@@ -129,7 +127,7 @@ public class GameRunner
                 synchronized(client) {
 		if (object instanceof BSServerCommunication) 
 		{
-		    comms = (BSServerCommunication)object;
+		    setcomm((BSServerCommunication)object);
 		    if(comms.started)
 		     {
 			 System.out.println("This game lobby has already started");
@@ -145,8 +143,10 @@ public class GameRunner
                 }
             }
         });
+	client.connect(5000, SERVER_IP, lobbyPort, lobbyPort);
         client.wait();
         client.removeListener(tempListener);
+	client.stop();
         } catch (IOException ex) {
             System.out.println(ex.toString());
             JOptionPane.showMessageDialog(null, "Unable connect to game server, please check your internet connection and try again.", "Server Connection Failed", JOptionPane.ERROR_MESSAGE);
@@ -168,7 +168,6 @@ public class GameRunner
         try
         {
             // Connect to game server and register a new lobby
-            client.connect(5000, SERVER_IP, 54777, 54777);
 	    Listener tempListener;
             client.addListener(tempListener = new Listener() 
             {
@@ -178,7 +177,7 @@ public class GameRunner
                     synchronized(client) {
 		    if (object instanceof BSServerCommunication) 
 		    {
-			comms = (BSServerCommunication)object;
+			setcomm((BSServerCommunication)object);
 			gameCode = comms.lobby.toString();
 			lobbyPort = BASE_PORT + Integer.parseInt(gameCode);
 			//System.out.println("Connecting to lobby: " + gameCode);
@@ -188,9 +187,10 @@ public class GameRunner
                     }
 		}
 	    });
+	    client.connect(5000, SERVER_IP, 54777, 54777);
             client.wait();
-	    client.removeListener(tempListener);
-            
+	    client.removeListener(tempListener); 
+            client.stop();
         } catch (IOException ex) {
             System.out.println(ex.toString());
             JOptionPane.showMessageDialog(null, "Unable connect to game server, please check your internet connection and try again.", "Server Connection Failed", JOptionPane.ERROR_MESSAGE);
@@ -204,5 +204,9 @@ public class GameRunner
             JOptionPane.showMessageDialog(null, "Unable connect to game server, please check your internet connection and try again.", "Server Connection Failed", JOptionPane.ERROR_MESSAGE);
         }
         }
+    }
+    public void setcomm(BSServerCommunication com)
+    {
+	comms = com;
     }
 }

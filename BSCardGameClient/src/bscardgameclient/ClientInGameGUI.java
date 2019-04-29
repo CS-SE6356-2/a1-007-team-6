@@ -57,7 +57,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     public void setNet(BSServerCommunication comm, int playerNum)
     {
 	//this.client.removeListener(LobbyListener);
-	this.comms = comm;
+	setcomm(comm);
 	this.playerNum = playerNum; //starts at 1
 	initializeCommClient();
 	//System.out.println(comms.lobby);
@@ -72,7 +72,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 	    kryo.register(BSServerCommunication.class);
 	    kryo.register(java.util.ArrayList.class);
 	    client.start();
-	    client.connect(5000, SERVER_IP, lobbyPort, lobbyPort);
+
 	    client.addListener(new Listener() 
 	    {
 		@Override
@@ -82,16 +82,22 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 		    {
 			if (object instanceof BSServerCommunication)
 			{
-			    comms = (BSServerCommunication)object;
+			    setcomm((BSServerCommunication)object);
 			    //System.out.println("gotcha");
-			    //add update sequence here for anytime server pushes something new
+			    //add button update sequence here for anytime server pushes something new(next turn or action performed)
 			    currentActionLogLabel.setText(comms.currentActionLog);
 			    previousActionLogLabel.setText(comms.previousActionLog);
-			    System.out.println("Recieved: " + comms.currentActionLog);
+			    //System.out.println("Recieved: " + comms.currentActionLog);
+			    
+			    cardToPlayLabel.setText("Card to play is: " + toCard(comms.CurrentCard));
+			    currentHand = comms.PlayerHands.get(playerNum - 1);
+			    int size = currentHand.size();
+			    setCardIcons((currentHand.subList(pageNumber * 8, (pageNumber+1)*8 > size ? size : (pageNumber+1)*8)));
 			}
 		    }
 		}
 	    });
+	    client.connect(5000, SERVER_IP, lobbyPort, lobbyPort);
 	} catch (IOException ex) {
 	    Logger.getLogger(ClientInGameGUI.class.getName()).log(Level.SEVERE, null, ex);
 	}
@@ -105,7 +111,6 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         
     public void setupCards()
     {
-        
         hands = comms.PlayerHands;
         currentHand = hands.get(playerNum - 1);
         
@@ -184,6 +189,13 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 		    button.setIcon(cardImage);
 		    button.setToolTipText("" + cardNum);
 		    index++;
+		}
+		else
+		{
+		    /* set the icon back to the default gray with no tooltip for the rest of the indicies
+		    button.setIcon(null);
+		    button.setToolTipText("" + cardNum);
+		    index++; */
 		}
             }
         } 
@@ -378,7 +390,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         }
         comms.action = 0;
         comms.actor = playerNum - 1;
-	System.out.println(client.isConnected());
+	//System.out.println(client.isConnected());
 	updateComms();
         //client.sendTCP(comms);
 	//System.out.println("in client after send");
@@ -438,6 +450,10 @@ public class ClientInGameGUI extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+    public void setcomm(BSServerCommunication com)
+    {
+	comms = com;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

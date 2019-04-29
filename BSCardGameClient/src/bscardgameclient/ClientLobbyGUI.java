@@ -50,8 +50,6 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
         initializeCommClient();
         try
         {
-	    //System.out.println(port);
-            client.connect(5000, SERVER_IP, port, port);
             client.addListener(LobbyListener = new Listener() 
             {
                 @Override
@@ -61,18 +59,20 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
 		    { 
 		    if (object instanceof BSServerCommunication) 
 		    {
-			comms = (BSServerCommunication)object;
+			setcomm((BSServerCommunication)object);
 			//System.out.println("Player has connected to: " + comms.lobby);
 			if(playernum == 0)
 			{
-			    System.out.println("first" + comms.numPlayers);
+			    //System.out.println("first" + comms.numPlayers);
 			    comms.numPlayers = comms.numPlayers + 1;
 			    playernum = comms.numPlayers;
-			    System.out.println(2 + comms.numPlayers);
+			    //System.out.println("second" + comms.numPlayers);
+			    connection.sendTCP(comms);
+			    //client.sendTCP(comms);
 			}
 			if(comms.started)
 			{			    
-			    client.notify();
+			    //client.notify();
 			    //System.out.println("launch request recieved");
 			    launchGameGUI();
 			}
@@ -80,6 +80,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
 		    }
                 }
             });
+	    client.connect(5000, SERVER_IP, port, port);
             
         } /*catch (IOException ex) {
 	    Logger.getLogger(ClientLobbyGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -207,6 +208,10 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
         inGame.setVisible(true);
         inGame.toFront();
         inGame.repaint();
+    }
+    public void setcomm(BSServerCommunication com)
+    {
+	comms = com;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
