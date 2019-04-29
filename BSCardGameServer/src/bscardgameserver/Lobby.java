@@ -154,16 +154,18 @@ public class Lobby extends Game
 	    ArrayList<Integer> anticipated = new ArrayList<>();
 	    anticipated.add(lastCard);
 	    pile.topCard.removeAll(anticipated);
-            if (pile.topCard.size() == 0)
+            if (pile.topCard.isEmpty())
             {
                 //challenger wrong if condition is met
-                comms.PlayerHands.get(comms.previousTurn-1).addAll(challengeDeck);
+                comms.PlayerHands.get(comms.actor).addAll(challengeDeck);
+                Collections.sort(comms.PlayerHands.get(comms.actor));
                 newMSG(comms.currentActionLog = "Player " + (comms.actor + 1) + " has called BS on " + (comms.previousTurn) + " and was wrong"); 
 		return false;
             }
             else
             {
                 comms.PlayerHands.get(comms.previousTurn-1).addAll(challengeDeck);
+                Collections.sort(comms.PlayerHands.get(comms.previousTurn-1));
                 comms.emptyPile = true;
                 newMSG(comms.currentActionLog = "Player " + (comms.actor + 1) + " has called BS on " + (comms.previousTurn) + " and was correct"); 
 		return true;
@@ -175,18 +177,20 @@ public class Lobby extends Game
     {
 	synchronized(server) {
 	numPlayers = comms.numPlayers;
-	for(int count = 1; count <= numPlayers; count++)
-	{
-	    Players.add(count);
-	}
-	comms.currentTurn = 1;
 	CurrentCard = 0;
 	if(numPlayers > 2)
 	    Winners = new Integer[numPlayers - 2];
 	comms.PlayerHands = new ArrayList<>();
 	distributeCards();
-	//NextPlayer();
-	//PushComms();
+        for(int count = Turn; count <= numPlayers; count++)
+	{
+            Players.add(count);
+	}
+        for(int count = 1; count < Turn; count++)
+        {
+            Players.add(count);
+        }
+        comms.currentTurn = Turn;
     }
     }
     
@@ -209,8 +213,11 @@ public class Lobby extends Game
 	    comms.PlayerHands.get(i).clear();
 	    for(int j = 0; j < each; j++)
 	    {
+                if(deck.get(0) == 0)
+                    Turn = i+1;
 		comms.PlayerHands.get(i).add(deck.remove(0));
 	    }
+            Collections.sort(comms.PlayerHands.get(i));
 	}
 	//the remaining cards seed the discard pile
 	pile.addCards(deck);
@@ -225,6 +232,7 @@ public class Lobby extends Game
 	    Turn = Players.poll();
 	    comms.currentTurn = Turn;
 	    Players.add(Turn);
+            lastCard = CurrentCard;
 	    if(CurrentCard == 12)
 		CurrentCard = 0;
 	    else

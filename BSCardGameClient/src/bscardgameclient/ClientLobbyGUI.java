@@ -183,14 +183,18 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
     private void startGameNowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startGameNowButtonActionPerformed
 	synchronized(client)
 	{
-            if(comms.numPlayers >= 3)
+            if(comms.numPlayers >= 3 && comms.numPlayers <= 6)
             {
                 comms.started = true;
                 client.sendTCP(comms);
             }
-            else
+            else if (comms.numPlayers < 3)
             {
                 JOptionPane.showMessageDialog(null, "You need at least 3 players to start the game", "Not Enough Players", JOptionPane.ERROR_MESSAGE);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "You need 6 or fewer players to start the game", "Too Many Players", JOptionPane.ERROR_MESSAGE);
             }
 
 	}
