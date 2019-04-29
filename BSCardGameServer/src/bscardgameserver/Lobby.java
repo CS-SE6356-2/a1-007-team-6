@@ -62,6 +62,7 @@ public class Lobby extends Game
             @Override
             public void connected (Connection connection) 
             {
+		System.out.println("connection");
 		synchronized(server) {
 		if (!connections.contains(connection))
 		{
@@ -241,7 +242,7 @@ public class Lobby extends Game
         {
             ((Connection)clients.next()).sendTCP(comms);
         }
-		System.out.println("pushed");
+		//System.out.println("pushed");
 		
 	}
     }

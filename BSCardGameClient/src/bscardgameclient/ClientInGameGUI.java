@@ -33,6 +33,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
      * Creates new form ex2
      */
     String gameCode = "";
+    final String SERVER_IP = "127.0.0.1";
     int lobbyPort;
     int playerNum;
     int pageNumber = 0;
@@ -53,9 +54,8 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         initComponents();
         setResizable(false);
     }
-    public void setNet(Client client, BSServerCommunication comm, int playerNum)
+    public void setNet(BSServerCommunication comm, int playerNum)
     {
-	this.client = client;
 	//this.client.removeListener(LobbyListener);
 	this.comms = comm;
 	this.playerNum = playerNum; //starts at 1
@@ -66,24 +66,35 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         
     public void initializeCommClient()
     {
-	client.addListener(new Listener() 
-	{
-	    @Override
-	    public void received (Connection connection, Object object) 
+	try {
+	    client = new Client();
+	    Kryo kryo = client.getKryo();
+	    kryo.register(BSServerCommunication.class);
+	    kryo.register(java.util.ArrayList.class);
+	    client.start();
+	    client.connect(5000, SERVER_IP, lobbyPort, lobbyPort);
+	    client.addListener(new Listener() 
 	    {
-		synchronized(client)    
-		{ 
-		if (object instanceof BSServerCommunication) 
+		@Override
+		public void received (Connection connection, Object object) 
 		{
-		    comms = (BSServerCommunication)object;
-		    System.out.println("gotcha");
-		    //add update sequence here for anytime server pushes something new
-                    //currentActionLogLabel.setText(comms.currentActionLog);
-		    //System.out.println("Recieved: " + comms.currentActionLog);
+		    synchronized(client)
+		    {
+			if (object instanceof BSServerCommunication)
+			{
+			    comms = (BSServerCommunication)object;
+			    //System.out.println("gotcha");
+			    //add update sequence here for anytime server pushes something new
+			    currentActionLogLabel.setText(comms.currentActionLog);
+			    previousActionLogLabel.setText(comms.previousActionLog);
+			    System.out.println("Recieved: " + comms.currentActionLog);
+			}
+		    }
 		}
-		}
-	    }
-	});
+	    });
+	} catch (IOException ex) {
+	    Logger.getLogger(ClientInGameGUI.class.getName()).log(Level.SEVERE, null, ex);
+	}
     }
     
     //met
@@ -114,7 +125,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         buttons.add(card7Button);
         buttons.add(card8Button);
         setCardIcons(currentHand.subList(0, 8));
-	updateComms();
+	//updateComms();
     }
     
     public String toCard(int c)
