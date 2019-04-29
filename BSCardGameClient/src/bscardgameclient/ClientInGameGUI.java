@@ -307,7 +307,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
         // TODO add your handling code here:
-	if (++pageNumber >= currentHand.size()/8)   //change to accomodate going below zero
+	if (--pageNumber <= currentHand.size()/8)   //change to accomodate going below zero
 	    pageNumber = 0;
         setCardIcons((currentHand.subList(pageNumber * 8, (pageNumber+1)*8-1 > currentHand.size() ? currentHand.size()+1 : (pageNumber+1)*8)));
 	System.out.println("after cardup date" + pageNumber);
