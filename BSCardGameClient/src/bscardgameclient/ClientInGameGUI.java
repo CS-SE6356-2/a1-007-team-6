@@ -334,7 +334,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         // TODO add your handling code here:
 	int size = currentHand.size();
-	if (++pageNumber >= size/8.0);
+	if (++pageNumber >= size/8.0)
 	    pageNumber = 0;
         setCardIcons((currentHand.subList(pageNumber * 8, (pageNumber+1)*8 > size ? size : (pageNumber+1)*8)));
 	//System.out.println("after cardup date" + pageNumber);
