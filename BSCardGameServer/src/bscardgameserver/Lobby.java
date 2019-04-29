@@ -89,22 +89,24 @@ public class Lobby extends Game
 	    @Override
 	    public void received (Connection connection, Object object) 
 	    {
-		synchronized(server) {
-		if (object instanceof BSServerCommunication) 
-		{
+	    synchronized(server) {
+	    if (object instanceof BSServerCommunication) 
+	    {
+		System.out.println("recieved something");
 		setcomm((BSServerCommunication)object);
 		    //BSServerCommunication comms = (BSServerCommunication)object;
 		if (!startcheck && comms.started)
 		{
 		    startcheck = true;
 		    StartGame();
+		    System.out.println("game started");
 		}
-		switch(comms.action)
+		else
 		{
-		    //switch cases for playing a card, challenging, and winning
-		    case 0: //card(s) played
-			if(!comms.cardsPlayed.isEmpty())
-			{
+		    switch(comms.action)
+		    {
+			//switch cases for playing a card, challenging, and winning
+			case 0: //card(s) played
 			    pile.addCards(comms.cardsPlayed);
 			    System.out.println("Someone is playing a card");
 			    comms.PlayerHands.get(comms.actor).removeAll(comms.cardsPlayed);
@@ -113,25 +115,23 @@ public class Lobby extends Game
 			    comms.cardsPlayed.clear();
 			    comms.emptyPile = false;
 			    NextPlayer();
-			}
-			else
-			    System.out.println("phantom cards played");
-			break;
-		    case 1: //challenged
-			Challenged();
-			break;
-		    case 2: //winner claimed; decide for serverside or client side checking
-			Winners[winners] = comms.actor + 1;
-                        newMSG(comms.currentActionLog = "Player " + (comms.actor + 1) + " has won!"); 
-			winners++;
-			break;
-		    default:	//error message
-			System.out.println("Inproper action recieved by client");
+			    break;
+			case 1: //challenged
+			    Challenged();
+			    break;
+			case 2: //winner claimed; decide for serverside or client side checking
+			    Winners[winners] = comms.actor + 1;
+			    newMSG(comms.currentActionLog = "Player " + (comms.actor + 1) + " has won!"); 
+			    winners++;
+			    break;
+			default:	//error message
+			    System.out.println("Inproper action recieved by client");
+		    }   
 		}
-		 
+
 		//connection.sendTCP(comms);
 		PushComms();
-	      }
+	    }
 	    }
 	    }
 	});
@@ -222,7 +222,7 @@ public class Lobby extends Game
 	    else
 		CurrentCard++;
 	    comms.CurrentCard = CurrentCard;
-	    PushComms();
+	    //PushComms();
 	}
     }
     
@@ -236,6 +236,7 @@ public class Lobby extends Game
         {
             ((Connection)clients.next()).sendTCP(comms);
         }
+		System.out.println("pushed");
 	}
     }
     

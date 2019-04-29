@@ -83,6 +83,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 		}
 	    }
 	});
+		    System.out.println("endlistener");
     }
     
     public void setLobbyPort(int lobbyPort)
@@ -329,17 +330,25 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         }
         comms.action = 0;
         comms.actor = playerNum - 1;
-        client.sendTCP(comms);
+	//System.out.println(client.isConnected());
+	updateComms();
+        //client.sendTCP(comms);
+	//System.out.println("in client after send");
     }//GEN-LAST:event_playCardButtonActionPerformed
 
     private void callBSButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_callBSButtonActionPerformed
         // TODO add your handling code here:
         comms.action = 1;
         comms.actor = playerNum;
-        client.sendTCP(comms);
+	updateComms();
+        //client.sendTCP(comms);
         JOptionPane.showMessageDialog(null, "You just called BS on "  + (playerNum - 1), "BS Called", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_callBSButtonActionPerformed
 
+    public void updateComms()
+    {
+	client.sendTCP(comms);
+    }
     /**
      * @param args the command line arguments
      */
