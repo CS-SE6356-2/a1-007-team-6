@@ -61,7 +61,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
 		    if (object instanceof BSServerCommunication) 
 		    {
 			comms = (BSServerCommunication)object;
-			System.out.println("Player has connected to: " + comms.lobby);
+			//System.out.println("Player has connected to: " + comms.lobby);
 			if(playernum == 0)
 			{
 			    playernum = comms.numPlayers;
@@ -69,7 +69,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
 			if(comms.started)
 			{			    
 			    client.notify();
-			    System.out.println("launch request recieved");
+			    //System.out.println("launch request recieved");
 			    launchGameGUI();
 			}
 		    }
@@ -192,7 +192,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_startGameNowButtonActionPerformed
     public void launchGameGUI()
     {
-	System.out.println("We're in the inGame now");
+	//System.out.println("We're in the inGame now");
 	ClientInGameGUI inGame = new ClientInGameGUI(this, true);
         inGame.setGameCode(gameCode);
         inGame.setLobbyPort(port);

@@ -58,7 +58,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 	this.client = client;
 	this.client.removeListener(LobbyListener);
 	this.comms = comm;
-	this.playerNum = playerNum;
+	this.playerNum = playerNum; //starts at 1
 	initializeCommClient();
 	//System.out.println(comms.lobby);
 	setupCards();
@@ -125,13 +125,16 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 	    index = 0;
             for(JToggleButton button : buttons)
             {
-                int cardNum = cards.get(index);
-                String fileName = "Resources/" + cardNum + ".png";
-                InputStream stream = getClass().getResourceAsStream(fileName);
-                ImageIcon cardImage = new ImageIcon(ImageIO.read(stream));
-                button.setIcon(cardImage);
-                button.setToolTipText("" + cardNum);
-                index++;
+		if (index <= cards.size() - 1)
+		{
+		    int cardNum = cards.get(index);
+		    String fileName = "Resources/" + cardNum + ".png";
+		    InputStream stream = getClass().getResourceAsStream(fileName);
+		    ImageIcon cardImage = new ImageIcon(ImageIO.read(stream));
+		    button.setIcon(cardImage);
+		    button.setToolTipText("" + cardNum);
+		    index++;
+		}
             }
         } 
         catch (IOException ex) 
@@ -301,9 +304,9 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         // TODO add your handling code here:
 	int size = currentHand.size();
-	if (++pageNumber > size/8.0);
+	if (++pageNumber >= size/8.0);
 	    pageNumber = 0;
-        setCardIcons((currentHand.subList(pageNumber * 8, (pageNumber+1)*8-1 > size ? size+1 : (pageNumber+1)*8)));
+        setCardIcons((currentHand.subList(pageNumber * 8, (pageNumber+1)*8 > size ? size : (pageNumber+1)*8)));
 	//System.out.println("after cardup date" + pageNumber);
     }//GEN-LAST:event_nextButtonActionPerformed
 
@@ -313,11 +316,11 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 	if (--pageNumber < 0)   //change to accomodate going below zero
 	{
 	    if (size/8.0 == size/8)//cycles pagenumber to the last page
-		pageNumber = size/8;
+		pageNumber = size/8 - 1;
 	    else
-		pageNumber = size/8 + 1;
+		pageNumber = size/8;
 	}
-        setCardIcons((currentHand.subList(pageNumber * 8, (pageNumber+1)*8-1 > size ? size+1 : (pageNumber+1)*8)));
+        setCardIcons((currentHand.subList(pageNumber * 8, (pageNumber+1)*8 > size ? size : (pageNumber+1)*8)));
 	//System.out.println("after cardup date" + pageNumber);
     }//GEN-LAST:event_previousButtonActionPerformed
 
