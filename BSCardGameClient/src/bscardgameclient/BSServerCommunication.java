@@ -17,6 +17,7 @@ public class BSServerCommunication
     public int CurrentCard;
     public ArrayList<ArrayList<Integer>>  PlayerHands;
     public boolean emptyPile;
+    public boolean isGameOver = false;
     
     public int actor;//player number
     public int action = -1;//what they did: 0 is play a card, 1 is challenge, 2 is win

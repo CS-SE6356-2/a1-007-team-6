@@ -116,7 +116,7 @@ public class Lobby extends Game
 			    System.out.println("Someone is playing a card");
 			    comms.PlayerHands.get(comms.actor).removeAll(comms.cardsPlayed);
 			    int numcards = comms.cardsPlayed.size();
-			    newMSG("Player " + Integer.toString(comms.actor + 1) + " played " + numcards + " " + toCard(lastCard) + (numcards > 1 ? "s" : ""));
+			    newMSG("Player " + Integer.toString(comms.actor + 1) + " played " + numcards + " " + toCard(CurrentCard) + (numcards > 1 ? "s" : ""));
 			    comms.cardsPlayed.clear();
 			    comms.emptyPile = false;
 			    NextPlayer();
@@ -129,8 +129,22 @@ public class Lobby extends Game
 			    break;
 			case 2: //winner claimed; decide for serverside or client side checking
 			    Winners[winners] = comms.actor + 1;
-			    newMSG(comms.currentActionLog = "Player " + (comms.actor + 1) + " has won!"); 
-			    winners++;
+			    newMSG("Player " + (comms.actor + 1) + " has won!"); 
+			    comms.numWinners = ++winners;
+                            if(winners == numPlayers - 1)
+                            {
+                                String places = "";
+                                comms.isGameOver = true;
+                                for(int winningPlayers : Winners)
+                                {
+                                    places = places + winningPlayers + ",";
+                                }
+                                newMSG("Game is over");
+                                places = "Winners in order are Players: " + places;
+                                newMSG(places.substring(0, places.length() - 1));
+                            }
+                            NextPlayer();
+                            Players.remove(comms.actor + 1);
 			    break;
 			default:	//error message
 			    System.out.println("Inproper action recieved by client");
@@ -159,7 +173,7 @@ public class Lobby extends Game
                 //challenger wrong if condition is met
                 comms.PlayerHands.get(comms.actor).addAll(challengeDeck);
                 Collections.sort(comms.PlayerHands.get(comms.actor));
-                newMSG(comms.currentActionLog = "Player " + (comms.actor + 1) + " has called BS on " + (comms.previousTurn) + " and was wrong"); 
+                newMSG("Player " + (comms.actor + 1) + " has called BS on " + (comms.previousTurn) + " and was wrong"); 
 		return false;
             }
             else
@@ -167,7 +181,7 @@ public class Lobby extends Game
                 comms.PlayerHands.get(comms.previousTurn-1).addAll(challengeDeck);
                 Collections.sort(comms.PlayerHands.get(comms.previousTurn-1));
                 comms.emptyPile = true;
-                newMSG(comms.currentActionLog = "Player " + (comms.actor + 1) + " has called BS on " + (comms.previousTurn) + " and was correct"); 
+                newMSG("Player " + (comms.actor + 1) + " has called BS on " + (comms.previousTurn) + " and was correct"); 
 		return true;
             }
         }
@@ -178,19 +192,19 @@ public class Lobby extends Game
 	synchronized(server) {
 	numPlayers = comms.numPlayers;
 	CurrentCard = 0;
-	if(numPlayers > 2)
-	    Winners = new Integer[numPlayers - 2];
+        Winners = new Integer[numPlayers - 1];
 	comms.PlayerHands = new ArrayList<>();
 	distributeCards();
-        for(int count = Turn; count <= numPlayers; count++)
+        comms.currentTurn = Turn;
+        for(int count = Turn + 1; count <= numPlayers; count++)
 	{
             Players.add(count);
 	}
-        for(int count = 1; count < Turn; count++)
+        for(int count = 1; count <= Turn; count++)
         {
             Players.add(count);
         }
-        comms.currentTurn = Turn;
+        
     }
     }
     
@@ -230,7 +244,9 @@ public class Lobby extends Game
 	    LastTurn = comms.currentTurn;
 	    comms.previousTurn = LastTurn;
 	    Turn = Players.poll();
+            System.out.println("Current turn afer players.poll(): " + comms.currentTurn);
 	    comms.currentTurn = Turn;
+            System.out.println("Current turn afer assignment to Turn: " + comms.currentTurn);
 	    Players.add(Turn);
             lastCard = CurrentCard;
 	    if(CurrentCard == 12)
@@ -247,20 +263,16 @@ public class Lobby extends Game
 	synchronized(server) {
 	System.out.println("pushing");
         server.sendToAllTCP(comms);
-	/*Iterator clients = connections.iterator();
-        while(clients.hasNext())
-        {
-            ((Connection)clients.next()).sendTCP(comms);
-        }*/
-		//System.out.println("pushed");
-		
 	}
     }
     
     public void newMSG(String str)
     {
-	comms.previousActionLog = comms.currentActionLog;
-	comms.currentActionLog = str;
+        if(comms.currentActionLog != str)
+        {
+            comms.previousActionLog = comms.currentActionLog;
+            comms.currentActionLog = str;
+        }
     }
     
     public String toCard(int c)

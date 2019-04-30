@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +44,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     Listener GameListener;
     BSServerCommunication comms;
     int index = 0;
+    boolean donePlaying;
     ArrayList<JToggleButton> buttons = new ArrayList<>();
     ArrayList<ArrayList<Integer>> hands = new ArrayList<>();
     ArrayList<Integer> currentHand;
@@ -53,6 +55,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setResizable(false);
+        donePlaying = false;
     }
     public void setNet(BSServerCommunication comm, int playerNum)
     {
@@ -92,7 +95,45 @@ public class ClientInGameGUI extends javax.swing.JDialog {
 			    cardToPlayLabel.setText("Card to play is: " + toCard(comms.CurrentCard));
 			    currentHand = comms.PlayerHands.get(playerNum - 1);
 			    int size = currentHand.size();
+                            pageNumber = 0;
 			    setCardIcons((currentHand.subList(pageNumber * 8, (pageNumber+1)*8 > size ? size : (pageNumber+1)*8)));
+                            if(comms.currentTurn == playerNum && !donePlaying)
+                            {
+                                playCardButton.setEnabled(true);
+                            }
+                            else
+                            {
+                                playCardButton.setEnabled(false);
+                            }
+                            
+                            if(comms.previousTurn == playerNum || comms.emptyPile || donePlaying)
+                            {
+                                callBSButton.setEnabled(false);
+                            }
+                            else
+                            {
+                                callBSButton.setEnabled(true);
+                            }
+                            
+                            if(currentHand.isEmpty() && comms.currentTurn == playerNum && !donePlaying)
+                            {
+                                donePlaying = true;
+                                comms.actor = playerNum - 1;
+                                comms.action = 2;
+                                callBSButton.setEnabled(false);
+                                playCardButton.setEnabled(false);
+                                updateComms();
+                                //JOptionPane.showMessageDialog(null, "You came in place: " + comms.numWinners, "Game Ended", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                            
+                            if(comms.isGameOver)
+                            {
+                                donePlaying = true;
+                                callBSButton.setEnabled(false);
+                                playCardButton.setEnabled(false);
+                                //JOptionPane.showMessageDialog(null, "You came in place: " + comms.numWinners, "Game Ended", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                            
 			}
 		    }
 		}
@@ -177,26 +218,25 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     {
         try 
         {
-	    index = 0;
+            Iterator<Integer> iter = cards.iterator();
             for(JToggleButton button : buttons)
             {
-		if (index <= cards.size() - 1)
-		{
-		    int cardNum = cards.get(index);
-		    String fileName = "Resources/" + cardNum + ".png";
-		    InputStream stream = getClass().getResourceAsStream(fileName);
-		    ImageIcon cardImage = new ImageIcon(ImageIO.read(stream));
-		    button.setIcon(cardImage);
-		    button.setToolTipText("" + cardNum);
-		    index++;
-		}
-		else
-		{
-		    /* set the icon back to the default gray with no tooltip for the rest of the indicies
-		    button.setIcon(null);
-		    button.setToolTipText("" + cardNum);
-		    index++; */
-		}
+
+                if(iter.hasNext())
+                {
+                    int cardNum = iter.next();
+                    String fileName = "Resources/" + cardNum + ".png";
+                    InputStream stream = getClass().getResourceAsStream(fileName);
+                    ImageIcon cardImage = new ImageIcon(ImageIO.read(stream));
+                    button.setIcon(cardImage);
+                    button.setToolTipText(Integer.toString(cardNum));
+                }
+                else
+                {
+                    button.setEnabled(false);
+                }
+
+
             }
         } 
         catch (IOException ex) 
@@ -378,31 +418,50 @@ public class ClientInGameGUI extends javax.swing.JDialog {
     }//GEN-LAST:event_previousButtonActionPerformed
 
     private void playCardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playCardButtonActionPerformed
-        // TODO add your handling code here:
+        int counter = 0;
         for(JToggleButton button : buttons)
         {
             if(button.isSelected())
             {
-                //System.out.println(button.getToolTipText());
-                comms.cardsPlayed.add(Integer.valueOf(button.getToolTipText()));
+                counter++;
                 System.out.println("Selected: " + Integer.valueOf(button.getToolTipText()));
             }
         }
-        comms.action = 0;
-        comms.actor = playerNum - 1;
-	//System.out.println(client.isConnected());
-	updateComms();
-        //client.sendTCP(comms);
-	//System.out.println("in client after send");
+        if(counter > 4)
+        {
+            JOptionPane.showMessageDialog(null, "You can only play a max of 4 cards at a time", "Invalid Number of Cards", JOptionPane.ERROR_MESSAGE);
+            for(JToggleButton button : buttons)
+            {
+                button.setSelected(false);
+            }
+        }
+        else if(counter == 0)
+        {
+            JOptionPane.showMessageDialog(null, "You must play at least one card", "Invalid Number of Cards", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            for(JToggleButton button : buttons)
+            {
+                if(button.isSelected())
+                {
+                    //System.out.println(button.getToolTipText());
+                    comms.cardsPlayed.add(Integer.valueOf(button.getToolTipText()));
+                    System.out.println("Selected: " + Integer.valueOf(button.getToolTipText()));
+                }
+            }
+            comms.action = 0;
+            comms.actor = playerNum - 1;
+            updateComms();
+        }
     }//GEN-LAST:event_playCardButtonActionPerformed
 
     private void callBSButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_callBSButtonActionPerformed
         // TODO add your handling code here:
         comms.action = 1;
-        comms.actor = playerNum;
+        comms.actor = playerNum - 1;
 	updateComms();
         //client.sendTCP(comms);
-        JOptionPane.showMessageDialog(null, "You just called BS on "  + (playerNum - 1), "BS Called", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_callBSButtonActionPerformed
 
     public void updateComms()
