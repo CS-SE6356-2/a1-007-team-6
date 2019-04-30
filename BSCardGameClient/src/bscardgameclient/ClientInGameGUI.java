@@ -34,7 +34,7 @@ public class ClientInGameGUI extends javax.swing.JDialog {
      * Creates new form ex2
      */
     String gameCode = "";
-    final String SERVER_IP = "127.0.0.1";
+    final String SERVER_IP = "97.99.238.31";
     int lobbyPort;
     int playerNum;
     int pageNumber = 0;

@@ -20,7 +20,7 @@ import javax.swing.*;
 public class GameRunner 
 {
     static ClientStartupGUI startupGUI = null;
-    final String SERVER_IP = "127.0.0.1";
+    final String SERVER_IP = "97.99.238.31";
     final int BASE_PORT = 54000;
     String gameCode = "default";
     boolean isLobbyCreator = false;

@@ -24,7 +24,7 @@ public class ClientLobbyGUI extends javax.swing.JFrame {
     public String gameCode = "";
     String currentAction = "";
     String previousAction = "";
-    final String SERVER_IP = "127.0.0.1";
+    final String SERVER_IP = "97.99.238.31";
     Client client;
     int port;
     public static volatile int playernum;
